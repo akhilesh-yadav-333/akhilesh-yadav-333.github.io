@@ -1,0 +1,332 @@
+import React, { useState } from 'react';
+import styled from 'styled-components';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
+
+const ContactSection = styled.section`
+  padding: 5rem 2rem;
+  background: #1e1e1e;
+`;
+
+const ContactContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+`;
+
+const SectionTitle = styled.h2`
+  font-size: 2.5rem;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 1rem;
+`;
+
+const SectionSubtitle = styled.p`
+  color: #8B0000;
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 4rem;
+`;
+
+const ContactContent = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+`;
+
+const ContactInfo = styled.div`
+  color: #9e9e9e;
+`;
+
+const ContactItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 10px;
+  border: 1px solid rgba(139, 0, 0, 0.2);
+`;
+
+const ContactIcon = styled.div`
+  font-size: 1.5rem;
+  color: #8B0000;
+  min-width: 40px;
+`;
+
+const ContactText = styled.div`
+  h4 {
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+  p {
+    color: #9e9e9e;
+    margin: 0;
+  }
+`;
+
+const SocialLinks = styled.div`
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+`;
+
+const SocialLink = styled.a`
+  color: #8B0000;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+  padding: 0.5rem;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 0, 0, 0.3);
+
+  &:hover {
+    color: #660000;
+    border-color: #8B0000;
+    transform: translateY(-2px);
+  }
+`;
+
+const ContactForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+`;
+
+const FormGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const FormLabel = styled.label`
+  color: #ffffff;
+  font-weight: 600;
+  font-size: 0.9rem;
+`;
+
+const FormInput = styled.input`
+  padding: 1rem;
+  background: rgba(139, 0, 0, 0.05);
+  border: 1px solid rgba(139, 0, 0, 0.2);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #8B0000;
+    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+  }
+
+  &::placeholder {
+    color: #9e9e9e;
+  }
+`;
+
+const FormTextarea = styled.textarea`
+  padding: 1rem;
+  background: rgba(139, 0, 0, 0.05);
+  border: 1px solid rgba(139, 0, 0, 0.2);
+  border-radius: 5px;
+  color: #ffffff;
+  font-size: 1rem;
+  min-height: 120px;
+  resize: vertical;
+  transition: all 0.3s ease;
+  font-family: inherit;
+
+  &:focus {
+    outline: none;
+    border-color: #8B0000;
+    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+  }
+
+  &::placeholder {
+    color: #9e9e9e;
+  }
+`;
+
+const SubmitButton = styled.button`
+  background: #8B0000;
+  color: #ffffff;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: flex-start;
+
+  &:hover {
+    background: #660000;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+`;
+
+const Contact = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    
+    // Here you would typically send the form data to your backend
+    console.log('Form submitted:', formData);
+    
+    // Reset form
+    setFormData({ name: '', email: '', subject: '', message: '' });
+    setIsSubmitting(false);
+    
+    // Show success message (you can implement a toast notification here)
+    alert('Thank you for your message! I will get back to you soon.');
+  };
+
+  return (
+    <ContactSection id="contact">
+      <ContactContainer>
+        <SectionTitle>Get In Touch</SectionTitle>
+        <SectionSubtitle>Let's work together</SectionSubtitle>
+        
+        <ContactContent>
+          <ContactInfo>
+            <ContactItem>
+              <ContactIcon>
+                <FaEnvelope />
+              </ContactIcon>
+              <ContactText>
+                <h4>Email</h4>
+                <p>your.email@example.com</p>
+              </ContactText>
+            </ContactItem>
+            
+            <ContactItem>
+              <ContactIcon>
+                <FaPhone />
+              </ContactIcon>
+              <ContactText>
+                <h4>Phone</h4>
+                <p>+1 (555) 123-4567</p>
+              </ContactText>
+            </ContactItem>
+            
+            <ContactItem>
+              <ContactIcon>
+                <FaMapMarkerAlt />
+              </ContactIcon>
+              <ContactText>
+                <h4>Location</h4>
+                <p>Your City, Country</p>
+              </ContactText>
+            </ContactItem>
+
+            <SocialLinks>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+                <FaLinkedin />
+              </SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+                <FaGithub />
+              </SocialLink>
+              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+                <FaTwitter />
+              </SocialLink>
+            </SocialLinks>
+          </ContactInfo>
+          
+          <ContactForm onSubmit={handleSubmit}>
+            <FormGroup>
+              <FormLabel htmlFor="name">Name</FormLabel>
+              <FormInput
+                type="text"
+                id="name"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Your name"
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="email">Email</FormLabel>
+              <FormInput
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="your.email@example.com"
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="subject">Subject</FormLabel>
+              <FormInput
+                type="text"
+                id="subject"
+                name="subject"
+                value={formData.subject}
+                onChange={handleChange}
+                placeholder="What's this about?"
+                required
+              />
+            </FormGroup>
+            
+            <FormGroup>
+              <FormLabel htmlFor="message">Message</FormLabel>
+              <FormTextarea
+                id="message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                placeholder="Tell me about your project..."
+                required
+              />
+            </FormGroup>
+            
+            <SubmitButton type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </SubmitButton>
+          </ContactForm>
+        </ContactContent>
+      </ContactContainer>
+    </ContactSection>
+  );
+};
+
+export default Contact;
