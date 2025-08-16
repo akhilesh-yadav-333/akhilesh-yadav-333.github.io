@@ -209,22 +209,6 @@ const JobLocation = styled.div`
   margin-bottom: 1.5rem;
 `;
 
-const JobDescription = styled.ul`
-  color: #bdbdbd;
-  line-height: 1.6;
-  margin: 0;
-  padding-left: 1.2rem;
-`;
-
-const JobDescriptionItem = styled.li`
-  margin-bottom: 0.5rem;
-  position: relative;
-
-  &::marker {
-    color: #8B0000;
-  }
-`;
-
 const CompanyLink = styled.a`
   color: #8B0000;
   text-decoration: none;
