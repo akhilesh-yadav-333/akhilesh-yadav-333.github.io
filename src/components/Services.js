@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaLaptopCode, FaMobile, FaServer, FaShieldAlt, FaChartLine, FaUsers } from 'react-icons/fa';
+import { FaShieldAlt, FaServer, FaLaptopCode, FaChartLine, FaUsers, FaMobile } from 'react-icons/fa';
 
 const ServicesSection = styled.section`
   padding: 5rem 2rem;
@@ -86,54 +86,98 @@ const ServiceFeature = styled.li`
 `;
 
 const Services = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const servicesRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (servicesRef.current) {
+      observer.observe(servicesRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const services = [
     {
-      icon: <FaLaptopCode />,
-      title: "Web Development",
-      description: "Custom web applications built with modern technologies and best practices.",
-      features: ["Responsive Design", "Performance Optimization", "SEO Friendly"]
-    },
-    {
-      icon: <FaMobile />,
-      title: "Mobile Development",
-      description: "Native and cross-platform mobile applications for iOS and Android.",
-      features: ["Cross-platform", "Native Performance", "App Store Ready"]
+      icon: <FaShieldAlt />,
+      title: "Penetration Testing",
+      description: "Comprehensive vulnerability assessment and penetration testing for web applications, networks, and cloud environments.",
+      features: ["Web App Security", "Network Pentesting", "Cloud Security", "API Security"]
     },
     {
       icon: <FaServer />,
-      title: "Backend Development",
-      description: "Robust server-side solutions with scalable architecture.",
-      features: ["API Development", "Database Design", "Cloud Deployment"]
+      title: "Security Operations",
+      description: "SIEM/EDR management, incident response, threat detection, and SOC operations optimization.",
+      features: ["Splunk/QRadar", "CrowdStrike", "Incident Response", "Threat Hunting"]
     },
     {
-      icon: <FaShieldAlt />,
-      title: "Security Solutions",
-      description: "Comprehensive security measures to protect your applications.",
-      features: ["Security Audits", "Penetration Testing", "Compliance"]
+      icon: <FaLaptopCode />,
+      title: "DevSecOps Security",
+      description: "Secure CI/CD pipelines, container security, and infrastructure as code security assessments.",
+      features: ["Kubernetes Security", "Docker Security", "Terraform", "Jenkins Security"]
     },
     {
       icon: <FaChartLine />,
-      title: "Data Analytics",
-      description: "Data-driven insights to help you make informed decisions.",
-      features: ["Data Visualization", "Reporting", "Predictive Analytics"]
+      title: "Vulnerability Management",
+      description: "Comprehensive vulnerability assessment, risk analysis, and remediation planning.",
+      features: ["Qualys/Nessus", "Risk Assessment", "Remediation Planning", "Compliance"]
     },
     {
       icon: <FaUsers />,
-      title: "Consulting",
-      description: "Expert guidance to help you achieve your technical goals.",
-      features: ["Technical Strategy", "Architecture Review", "Team Training"]
+      title: "Security Consulting",
+      description: "Security policy development, compliance assessments, and third-party risk evaluations.",
+      features: ["Policy Development", "ISO 27001", "NIST RMF", "Risk Assessment"]
+    },
+    {
+      icon: <FaMobile />,
+      title: "Security Automation",
+      description: "Custom scripting and automation for security tasks, threat intelligence, and incident response.",
+      features: ["Python Scripts", "Bash Automation", "Threat Intelligence", "Workflow Automation"]
     }
   ];
 
   return (
-    <ServicesSection id="services">
+    <ServicesSection id="services" ref={servicesRef}>
       <ServicesContainer>
-        <SectionTitle>Services</SectionTitle>
-        <SectionSubtitle>What I can do for you</SectionSubtitle>
+        <SectionTitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
+          What I Do
+        </SectionTitle>
         
+        <SectionSubtitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.2s'
+          }}
+        >
+          Services I offer to help secure your digital assets
+        </SectionSubtitle>
+
         <ServicesGrid>
           {services.map((service, index) => (
-            <ServiceCard key={index}>
+            <ServiceCard 
+              key={index}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
+                transition: `all 0.8s ease ${0.3 + index * 0.1}s`
+              }}
+            >
               <ServiceIcon>{service.icon}</ServiceIcon>
               <ServiceTitle>{service.title}</ServiceTitle>
               <ServiceDescription>{service.description}</ServiceDescription>

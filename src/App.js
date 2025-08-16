@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
+import Experience from './components/Experience';
 import Services from './components/Services';
 import Portfolio from './components/Portfolio';
 import Awards from './components/Awards';
 import Contact from './components/Contact';
+import PageLoader from './components/PageLoader';
 import './App.css';
 
 const AppContainer = styled.div`
@@ -21,12 +23,23 @@ const MainContent = styled.main`
 `;
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  const handleLoadingComplete = () => {
+    setIsLoading(false);
+  };
+
+  if (isLoading) {
+    return <PageLoader onLoadingComplete={handleLoadingComplete} />;
+  }
+
   return (
     <AppContainer>
       <Header />
       <MainContent>
         <Hero />
         <About />
+        <Experience />
         <Services />
         <Portfolio />
         <Awards />

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FaGithub, FaEye } from 'react-icons/fa';
 
@@ -82,6 +82,14 @@ const ProjectImage = styled.div`
   border-bottom: 1px solid rgba(139, 0, 0, 0.2);
 `;
 
+const ProjectImagePlaceholder = styled.div`
+  color: #8B0000;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem;
+`;
+
 const ProjectContent = styled.div`
   padding: 1.5rem;
 `;
@@ -135,65 +143,84 @@ const ProjectLink = styled.a`
 
 const Portfolio = () => {
   const [activeFilter, setActiveFilter] = useState('all');
+  const [isVisible, setIsVisible] = useState(false);
+  const portfolioRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (portfolioRef.current) {
+      observer.observe(portfolioRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   const projects = [
     {
       id: 1,
-      title: "E-Commerce Platform",
-      description: "A full-stack e-commerce solution with modern UI/UX, payment integration, and admin dashboard.",
-      image: "E-Commerce Platform",
-      tech: ["React", "Node.js", "MongoDB", "Stripe"],
-      category: "web",
+      title: "Client Pentest Engagement",
+      description: "Conducted a full vulnerability assessment and penetration test for a client environment. Included reconnaissance, exploitation, post-exploitation, and reporting. Delivered executive summary, technical details, and actionable remediation steps.",
+      image: "Client Pentest",
+      tech: ["Burp Suite", "OWASP ZAP", "Nmap", "SQLmap"],
+      category: "pentesting",
       live: "#",
       github: "#"
     },
     {
       id: 2,
-      title: "Mobile Banking App",
-      description: "Secure mobile banking application with biometric authentication and real-time transactions.",
-      image: "Mobile Banking App",
-      tech: ["React Native", "Firebase", "Redux", "Biometrics"],
-      category: "mobile",
+      title: "Kubernetes Goat Exploitation",
+      description: "Gained cluster admin by exploiting RBAC misconfigurations, API abuse, and privilege escalation in simulated Kubernetes environments. Demonstrated cloud security expertise and container exploitation techniques.",
+      image: "Kubernetes Security",
+      tech: ["Kubernetes", "Docker", "RBAC", "API Security"],
+      category: "cloud",
       live: "#",
       github: "#"
     },
     {
       id: 3,
-      title: "AI Chatbot",
-      description: "Intelligent chatbot powered by machine learning for customer support automation.",
-      image: "AI Chatbot",
-      tech: ["Python", "TensorFlow", "NLP", "FastAPI"],
-      category: "ai",
+      title: "Reverse Engineering (pwn.college)",
+      description: "Completed program security modules: assembly analysis, binary patching, and exploit crafting. Developed skills in Ghidra, Radare2, and binary exploitation techniques.",
+      image: "Reverse Engineering",
+      tech: ["Ghidra", "Radare2", "Assembly", "Binary Exploitation"],
+      category: "reverse",
       live: "#",
       github: "#"
     },
     {
       id: 4,
-      title: "Data Analytics Dashboard",
-      description: "Comprehensive dashboard for visualizing and analyzing business metrics and KPIs.",
-      image: "Data Analytics Dashboard",
-      tech: ["Vue.js", "D3.js", "Python", "PostgreSQL"],
-      category: "web",
+      title: "Self-Hosted Pentest Lab",
+      description: "Built & exploited DVWA, Juice Shop, and Active Directory network; tested privilege escalation and persistence techniques. Created comprehensive testing environment for security research.",
+      image: "Pentest Lab",
+      tech: ["DVWA", "Juice Shop", "Active Directory", "Metasploit"],
+      category: "pentesting",
       live: "#",
       github: "#"
     },
     {
       id: 5,
-      title: "IoT Smart Home",
-      description: "Connected home automation system with mobile app control and sensor monitoring.",
-      image: "IoT Smart Home",
-      tech: ["Arduino", "ESP32", "React Native", "MQTT"],
-      category: "iot",
+      title: "AWS Cloud Pentest",
+      description: "Exploited IAM role misconfigurations, S3 bucket exposures, and Lambda function abuse. Demonstrated cloud security assessment capabilities and AWS exploitation techniques.",
+      image: "AWS Security",
+      tech: ["AWS", "IAM", "S3", "Lambda"],
+      category: "cloud",
       live: "#",
       github: "#"
     },
     {
       id: 6,
-      title: "Blockchain Wallet",
-      description: "Secure cryptocurrency wallet with multi-chain support and transaction history.",
-      image: "Blockchain Wallet",
-      tech: ["Web3.js", "Solidity", "React", "MetaMask"],
-      category: "blockchain",
+      title: "SIEM Dashboard Development",
+      description: "Created multiple dashboards to improve monitoring metrics around security checks. Led dashboard development for security control, user activity monitoring for insider threat and phishing mail attempts matrix.",
+      image: "SIEM Dashboards",
+      tech: ["Splunk", "QRadar", "Dashboarding", "Security Metrics"],
+      category: "soc",
       live: "#",
       github: "#"
     }
@@ -201,11 +228,10 @@ const Portfolio = () => {
 
   const filters = [
     { key: 'all', label: 'All' },
-    { key: 'web', label: 'Web Apps' },
-    { key: 'mobile', label: 'Mobile Apps' },
-    { key: 'ai', label: 'AI/ML' },
-    { key: 'iot', label: 'IoT' },
-    { key: 'blockchain', label: 'Blockchain' }
+    { key: 'pentesting', label: 'Penetration Testing' },
+    { key: 'cloud', label: 'Cloud Security' },
+    { key: 'reverse', label: 'Reverse Engineering' },
+    { key: 'soc', label: 'Security Operations' }
   ];
 
   const filteredProjects = activeFilter === 'all' 
@@ -213,13 +239,36 @@ const Portfolio = () => {
     : projects.filter(project => project.category === activeFilter);
 
   return (
-    <PortfolioSection id="portfolio">
+    <PortfolioSection id="portfolio" ref={portfolioRef}>
       <PortfolioContainer>
-        <SectionTitle>Portfolio</SectionTitle>
-        <SectionSubtitle>Some of my recent work</SectionSubtitle>
+        <SectionTitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
+          Some Things I've Built
+        </SectionTitle>
         
-        <FilterButtons>
-          {filters.map(filter => (
+        <SectionSubtitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.2s'
+          }}
+        >
+          A selection of my recent work and projects
+        </SectionSubtitle>
+
+        <FilterButtons 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.4s'
+          }}
+        >
+          {filters.map((filter) => (
             <FilterButton
               key={filter.key}
               active={activeFilter === filter.key}
@@ -229,25 +278,40 @@ const Portfolio = () => {
             </FilterButton>
           ))}
         </FilterButtons>
-        
-        <PortfolioGrid>
-          {filteredProjects.map(project => (
-            <ProjectCard key={project.id}>
-              <ProjectImage>{project.image}</ProjectImage>
+
+        <PortfolioGrid 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.6s'
+          }}
+        >
+          {filteredProjects.map((project, index) => (
+            <ProjectCard 
+              key={project.id}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
+                transition: `all 0.8s ease ${0.6 + index * 0.1}s`
+              }}
+            >
+              <ProjectImage>
+                <ProjectImagePlaceholder>{project.image}</ProjectImagePlaceholder>
+              </ProjectImage>
               <ProjectContent>
                 <ProjectTitle>{project.title}</ProjectTitle>
                 <ProjectDescription>{project.description}</ProjectDescription>
                 <ProjectTech>
-                  {project.tech.map((tech, index) => (
-                    <TechTag key={index}>{tech}</TechTag>
+                  {project.tech.map((tech, techIndex) => (
+                    <TechTag key={techIndex}>{tech}</TechTag>
                   ))}
                 </ProjectTech>
                 <ProjectLinks>
                   <ProjectLink href={project.live} target="_blank" rel="noopener noreferrer">
-                    <FaEye /> Live Demo
+                    <FaEye /> View Details
                   </ProjectLink>
                   <ProjectLink href={project.github} target="_blank" rel="noopener noreferrer">
-                    <FaGithub /> Code
+                    <FaGithub /> Learn More
                   </ProjectLink>
                 </ProjectLinks>
               </ProjectContent>

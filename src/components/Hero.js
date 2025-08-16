@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FaArrowRight } from 'react-icons/fa';
 
@@ -55,12 +55,12 @@ const Greeting = styled.p`
 `;
 
 const Name = styled.h1`
-  font-size: clamp(3rem, 8vw, 5rem);
+  font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
   color: #ffffff;
   margin-bottom: 1rem;
   line-height: 1.1;
-  min-height: clamp(3rem, 8vw, 5rem);
+  min-height: clamp(2.5rem, 6vw, 4rem);
   position: relative;
 
   &::after {
@@ -76,19 +76,20 @@ const Name = styled.h1`
   }
 
   @media (max-width: 768px) {
-    font-size: 3rem;
-    min-height: 3rem;
+    font-size: 2.5rem;
+    min-height: 2.5rem;
   }
 `;
 
 const Title = styled.h2`
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.2rem, 3vw, 2rem);
   font-weight: 600;
   color: #bdbdbd;
   margin-bottom: 2rem;
   line-height: 1.2;
-  min-height: clamp(1.5rem, 4vw, 2.5rem);
+  min-height: clamp(1.2rem, 3vw, 2rem);
   position: relative;
+  white-space: nowrap;
 
   &::after {
     content: '|';
@@ -155,6 +156,12 @@ const PhotoContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+  }
 
   @media (max-width: 768px) {
     width: 300px;
@@ -169,6 +176,7 @@ const ProfileImage = styled.img`
   object-position: center;
   position: relative;
   z-index: 2;
+  transition: all 0.3s ease;
 `;
 
 const DesignElement1 = styled.div`
@@ -286,57 +294,83 @@ const Hero = () => {
   const [name, setName] = useState('');
   const [title, setTitle] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const heroRef = useRef(null);
 
   const fullGreeting = "Hello I'm";
-  const fullName = "Your Name";
-  const fullTitle = "Your Professional Title";
+  const fullName = "Akhilesh Yadav";
+  const fullTitle = "Security Engineer & Penetration Tester";
 
   useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (heroRef.current) {
+      observer.observe(heroRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
     const typewriter = () => {
       if (currentIndex === 0) {
-        // Type greeting
         if (greeting.length < fullGreeting.length) {
           setGreeting(fullGreeting.slice(0, greeting.length + 1));
         } else {
           setCurrentIndex(1);
         }
       } else if (currentIndex === 1) {
-        // Type name
         if (name.length < fullName.length) {
           setName(fullName.slice(0, name.length + 1));
         } else {
           setCurrentIndex(2);
         }
       } else if (currentIndex === 2) {
-        // Type title
         if (title.length < fullTitle.length) {
           setTitle(fullTitle.slice(0, title.length + 1));
         }
       }
     };
-
     const timer = setTimeout(typewriter, 100);
     return () => clearTimeout(timer);
-  }, [greeting, name, title, currentIndex]);
+  }, [greeting, name, title, currentIndex, isVisible]);
 
   return (
-    <HeroSection id="home">
+    <HeroSection id="home" ref={heroRef}>
       <HeroContainer>
-        <HeroContent>
+        <HeroContent 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
           <Greeting>{greeting}</Greeting>
           <Name>{name}</Name>
           <Title>{title}</Title>
           <Description>
-            I'm a passionate professional ready to bring your ideas to life. 
-            With expertise in my field, I create innovative solutions that 
-            make a difference. Let's work together to achieve your goals.
+            Entry-level penetration tester with a strong foundation in vulnerability assessment and blue team defense, now specializing in offensive security. Hands-on experience in Kubernetes exploitation, reverse engineering, and full-stack pentesting through self-hosted labs, Kubernetes Goat, and pwn.college program security challenges.
           </Description>
           <CTAButton>
             Get Started <FaArrowRight />
           </CTAButton>
         </HeroContent>
-        
-        <HeroImage>
+        <HeroImage 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
+            transition: 'all 0.8s ease 0.3s'
+          }}
+        >
           <PhotoContainer>
             <DesignElement1 />
             <DesignElement2 />
@@ -345,9 +379,9 @@ const Hero = () => {
             <DesignElement5 />
             <OrganicBorder />
             <OrganicBorder2 />
-            <ProfileImage 
-              src="/images/profile-photo.jpg" 
-              alt="Professional headshot"
+            <ProfileImage
+              src="/images/profile-photo.jpg"
+              alt="Akhilesh Yadav - Security Professional"
             />
             <LeftShoulderCover />
           </PhotoContainer>

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const ContactSection = styled.section`
   padding: 5rem 2rem;
@@ -188,140 +188,168 @@ const Contact = () => {
     subject: '',
     message: ''
   });
+  const [isVisible, setIsVisible] = useState(false);
+  const contactRef = useRef(null);
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    if (contactRef.current) {
+      observer.observe(contactRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // Here you would typically send the form data to your backend
+    // Handle form submission here
     console.log('Form submitted:', formData);
-    
-    // Reset form
-    setFormData({ name: '', email: '', subject: '', message: '' });
-    setIsSubmitting(false);
-    
-    // Show success message (you can implement a toast notification here)
-    alert('Thank you for your message! I will get back to you soon.');
   };
 
   return (
-    <ContactSection id="contact">
+    <ContactSection id="contact" ref={contactRef}>
       <ContactContainer>
-        <SectionTitle>Get In Touch</SectionTitle>
-        <SectionSubtitle>Let's work together</SectionSubtitle>
+        <SectionTitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
+          Get In Touch
+        </SectionTitle>
         
+        <SectionSubtitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.2s'
+          }}
+        >
+          Let's discuss your security needs
+        </SectionSubtitle>
+
         <ContactContent>
-          <ContactInfo>
+          <ContactInfo 
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
+              transition: 'all 0.8s ease 0.4s'
+            }}
+          >
             <ContactItem>
-              <ContactIcon>
-                <FaEnvelope />
-              </ContactIcon>
+              <ContactIcon><FaEnvelope /></ContactIcon>
               <ContactText>
                 <h4>Email</h4>
-                <p>your.email@example.com</p>
+                <p>akhileshyadav333@gmail.com</p>
               </ContactText>
             </ContactItem>
             
             <ContactItem>
-              <ContactIcon>
-                <FaPhone />
-              </ContactIcon>
+              <ContactIcon><FaPhone /></ContactIcon>
               <ContactText>
                 <h4>Phone</h4>
-                <p>+1 (555) 123-4567</p>
+                <p>+91 7236970898</p>
               </ContactText>
             </ContactItem>
             
             <ContactItem>
-              <ContactIcon>
-                <FaMapMarkerAlt />
-              </ContactIcon>
+              <ContactIcon><FaMapMarkerAlt /></ContactIcon>
               <ContactText>
                 <h4>Location</h4>
-                <p>Your City, Country</p>
+                <p>Bangalore, India</p>
               </ContactText>
             </ContactItem>
-
+            
             <SocialLinks>
-              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
-                <FaLinkedin />
+              <SocialLink href="https://github.com/akhilesh-yadav-333" target="_blank" rel="noopener noreferrer">
+                <FaGithub />
               </SocialLink>
               <SocialLink href="#" target="_blank" rel="noopener noreferrer">
-                <FaGithub />
+                <FaLinkedin />
               </SocialLink>
               <SocialLink href="#" target="_blank" rel="noopener noreferrer">
                 <FaTwitter />
               </SocialLink>
             </SocialLinks>
           </ContactInfo>
-          
-          <ContactForm onSubmit={handleSubmit}>
-            <FormGroup>
-              <FormLabel htmlFor="name">Name</FormLabel>
-              <FormInput
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                placeholder="Your name"
-                required
-              />
-            </FormGroup>
-            
-            <FormGroup>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <FormInput
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder="your.email@example.com"
-                required
-              />
-            </FormGroup>
-            
-            <FormGroup>
-              <FormLabel htmlFor="subject">Subject</FormLabel>
-              <FormInput
-                type="text"
-                id="subject"
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                placeholder="What's this about?"
-                required
-              />
-            </FormGroup>
-            
-            <FormGroup>
-              <FormLabel htmlFor="message">Message</FormLabel>
-              <FormTextarea
-                id="message"
-                name="message"
-                value={formData.message}
-                onChange={handleChange}
-                placeholder="Tell me about your project..."
-                required
-              />
-            </FormGroup>
-            
-            <SubmitButton type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Sending...' : 'Send Message'}
-            </SubmitButton>
+
+          <ContactForm 
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
+              transition: 'all 0.8s ease 0.6s'
+            }}
+          >
+            <form onSubmit={handleSubmit}>
+              <FormGroup>
+                <FormLabel htmlFor="name">Name</FormLabel>
+                <FormInput
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              
+              <FormGroup>
+                <FormLabel htmlFor="email">Email</FormLabel>
+                <FormInput
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              
+              <FormGroup>
+                <FormLabel htmlFor="subject">Subject</FormLabel>
+                <FormInput
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleInputChange}
+                  required
+                />
+              </FormGroup>
+              
+              <FormGroup>
+                <FormLabel htmlFor="message">Message</FormLabel>
+                <FormTextarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleInputChange}
+                  rows="5"
+                  required
+                />
+              </FormGroup>
+              
+              <SubmitButton type="submit">
+                Send Message
+              </SubmitButton>
+            </form>
           </ContactForm>
         </ContactContent>
       </ContactContainer>

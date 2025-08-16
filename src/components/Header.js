@@ -133,6 +133,7 @@ const Header = () => {
           <NavLinks>
             <NavLink onClick={() => scrollToSection('home')}>Home</NavLink>
             <NavLink onClick={() => scrollToSection('about')}>About</NavLink>
+            <NavLink onClick={() => scrollToSection('experience')}>Experience</NavLink>
             <NavLink onClick={() => scrollToSection('services')}>Services</NavLink>
             <NavLink onClick={() => scrollToSection('portfolio')}>Portfolio</NavLink>
             <NavLink onClick={() => scrollToSection('awards')}>Awards</NavLink>
@@ -148,6 +149,7 @@ const Header = () => {
       <MobileMenu isOpen={isMobileMenuOpen}>
         <MobileNavLink onClick={() => scrollToSection('home')}>Home</MobileNavLink>
         <MobileNavLink onClick={() => scrollToSection('about')}>About</MobileNavLink>
+        <MobileNavLink onClick={() => scrollToSection('experience')}>Experience</MobileNavLink>
         <MobileNavLink onClick={() => scrollToSection('services')}>Services</MobileNavLink>
         <MobileNavLink onClick={() => scrollToSection('portfolio')}>Portfolio</MobileNavLink>
         <MobileNavLink onClick={() => scrollToSection('awards')}>Awards</MobileNavLink>

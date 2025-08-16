@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { FaTrophy, FaCertificate, FaMedal, FaStar, FaAward, FaRibbon } from 'react-icons/fa';
 
@@ -124,61 +124,105 @@ const AchievementLabel = styled.div`
 `;
 
 const Awards = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const awardsRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (awardsRef.current) {
+      observer.observe(awardsRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const awards = [
     {
-      icon: <FaTrophy />,
-      title: "Best Developer Award",
-      description: "Recognized for outstanding contributions to open-source projects and innovative solutions.",
-      date: "2024"
+      icon: <FaCertificate />,
+      title: "Certified Ethical Hacker (CEH)",
+      description: "EC-Council certification demonstrating expertise in ethical hacking, penetration testing, and security assessment methodologies.",
+      date: "August 2023"
     },
     {
-      icon: <FaCertificate />,
-      title: "AWS Solutions Architect",
-      description: "Certified professional with expertise in cloud architecture and deployment strategies.",
-      date: "2023"
+      icon: <FaTrophy />,
+      title: "Certified in Cybersecurity (CC)",
+      description: "(ISC)² certification validating foundational cybersecurity knowledge and professional competence in the field.",
+      date: "December 2023"
     },
     {
       icon: <FaMedal />,
-      title: "Innovation Excellence",
-      description: "Awarded for developing cutting-edge solutions that solve real-world problems.",
-      date: "2023"
+      title: "Security Engineer at Veltris",
+      description: "Leading security operations, SIEM management, and DevSecOps initiatives for enterprise clients.",
+      date: "May 2024 - Present"
     },
     {
       icon: <FaStar />,
-      title: "Top Performer",
-      description: "Consistently delivered high-quality work and exceeded project expectations.",
-      date: "2022"
+      title: "SOC Analyst Experience",
+      description: "24/7 security monitoring, incident response, and threat analysis in enterprise environments.",
+      date: "December 2022 - May 2024"
     },
     {
       icon: <FaAward />,
-      title: "Technical Leadership",
-      description: "Recognized for mentoring team members and driving technical excellence.",
-      date: "2022"
+      title: "Red Team Enthusiast",
+      description: "Active participation in CTF challenges, TryHackMe, and HackTheBox for continuous skill development.",
+      date: "Ongoing"
     },
     {
       icon: <FaRibbon />,
-      title: "Community Contributor",
-      description: "Active contributor to developer communities and open-source projects.",
-      date: "2021"
+      title: "Bachelor's in Computer Science",
+      description: "Graduated from SVCE, Bangalore with focus on cybersecurity and engineering principles.",
+      date: "2018-2022"
     }
   ];
 
   const achievements = [
-    { number: "50+", label: "Projects Completed" },
-    { number: "100+", label: "Happy Clients" },
-    { number: "5+", label: "Years Experience" },
-    { number: "25+", label: "Technologies" }
+    { number: "2+", label: "Years Security Experience" },
+    { number: "3+", label: "Security Certifications" },
+    { number: "10+", label: "Security Tools Mastered" },
+    { number: "24/7", label: "SOC Operations" }
   ];
 
   return (
-    <AwardsSection id="awards">
+    <AwardsSection id="awards" ref={awardsRef}>
       <AwardsContainer>
-        <SectionTitle>Awards & Recognition</SectionTitle>
-        <SectionSubtitle>My achievements and certifications</SectionSubtitle>
+        <SectionTitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
+          Awards & Achievements
+        </SectionTitle>
         
+        <SectionSubtitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.2s'
+          }}
+        >
+          Recognition for my work and dedication
+        </SectionSubtitle>
+
         <AwardsGrid>
           {awards.map((award, index) => (
-            <AwardCard key={index}>
+            <AwardCard 
+              key={index}
+              style={{
+                opacity: isVisible ? 1 : 0,
+                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
+                transition: `all 0.8s ease ${0.3 + index * 0.1}s`
+              }}
+            >
               <AwardIcon>{award.icon}</AwardIcon>
               <AwardTitle>{award.title}</AwardTitle>
               <AwardDescription>{award.description}</AwardDescription>
@@ -191,7 +235,14 @@ const Awards = () => {
           <AchievementTitle>Key Achievements</AchievementTitle>
           <AchievementGrid>
             {achievements.map((achievement, index) => (
-              <AchievementItem key={index}>
+              <AchievementItem 
+                key={index}
+                style={{
+                  opacity: isVisible ? 1 : 0,
+                  transform: isVisible ? 'scale(1)' : 'scale(0.8)',
+                  transition: `all 0.8s ease ${1.0 + index * 0.1}s`
+                }}
+              >
                 <AchievementNumber>{achievement.number}</AchievementNumber>
                 <AchievementLabel>{achievement.label}</AchievementLabel>
               </AchievementItem>

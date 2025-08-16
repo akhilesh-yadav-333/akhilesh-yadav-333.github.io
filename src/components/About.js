@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaUser, FaCode, FaLightbulb } from 'react-icons/fa';
+import { FaShieldAlt, FaCode, FaRocket } from 'react-icons/fa';
 
 const AboutSection = styled.section`
   padding: 5rem 2rem;
@@ -88,58 +88,102 @@ const SkillDescription = styled.p`
 `;
 
 const About = () => {
+  const [isVisible, setIsVisible] = useState(false);
+  const aboutRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (aboutRef.current) {
+      observer.observe(aboutRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <AboutSection id="about">
+    <AboutSection id="about" ref={aboutRef}>
       <AboutContainer>
-        <SectionTitle>About Me</SectionTitle>
-        <SectionSubtitle>Get to know me better</SectionSubtitle>
+        <SectionTitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease'
+          }}
+        >
+          About Me
+        </SectionTitle>
         
+        <SectionSubtitle 
+          style={{
+            opacity: isVisible ? 1 : 0,
+            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
+            transition: 'all 0.8s ease 0.2s'
+          }}
+        >
+          Get to know me better
+        </SectionSubtitle>
+
         <AboutContent>
-          <AboutText>
+          <AboutText 
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
+              transition: 'all 0.8s ease 0.4s'
+            }}
+          >
             <AboutParagraph>
-              I'm a passionate and dedicated professional with a strong foundation in my field. 
-              I believe in continuous learning and staying up-to-date with the latest trends 
-              and technologies.
+              I'm Akhilesh Yadav, a Security Engineer with robust hands-on experience in cloud security, email security, SIEM/EDR platforms (Splunk, QRadar, CrowdStrike), and security automation. Skilled in incident response, threat detection (MITRE ATT&CK), vulnerability management, and secure configurations in AWS environments.
             </AboutParagraph>
             <AboutParagraph>
-              With several years of experience, I've worked on various projects that have 
-              helped me develop a diverse skill set. I'm always looking for new challenges 
-              and opportunities to grow both personally and professionally.
+              With a strong scripting background (Python, Bash), I specialize in DevSecOps pipelines, compliance (ISO 27001, NIST RMF), and WAF optimization. I've demonstrated success in streamlining SOC operations, building security policies, and improving threat visibility across diverse infrastructures.
             </AboutParagraph>
             <AboutParagraph>
-              When I'm not working, you can find me exploring new technologies, contributing 
-              to open-source projects, or sharing knowledge with the community.
+              Currently working as a Security Engineer at Veltris, I'm passionate about offensive security and continuously learning through platforms like TryHackMe, HackTheBox, and CTF challenges to stay current with emerging threats and response strategies.
             </AboutParagraph>
           </AboutText>
-          
-          <SkillsContainer>
+
+          <SkillsContainer 
+            style={{
+              opacity: isVisible ? 1 : 0,
+              transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
+              transition: 'all 0.8s ease 0.6s'
+            }}
+          >
             <SkillCard>
               <SkillIcon>
-                <FaUser />
+                <FaShieldAlt />
               </SkillIcon>
-              <SkillTitle>Personal</SkillTitle>
+              <SkillTitle>Security Expertise</SkillTitle>
               <SkillDescription>
-                Dedicated, creative, and always eager to learn new things
+                Comprehensive knowledge in cybersecurity, penetration testing, and security operations
               </SkillDescription>
             </SkillCard>
-            
+
             <SkillCard>
               <SkillIcon>
                 <FaCode />
               </SkillIcon>
-              <SkillTitle>Technical</SkillTitle>
+              <SkillTitle>Technical Skills</SkillTitle>
               <SkillDescription>
-                Strong problem-solving skills and technical expertise
+                Proficient in Python, Bash, PowerShell, and various security tools and platforms
               </SkillDescription>
             </SkillCard>
-            
+
             <SkillCard>
               <SkillIcon>
-                <FaLightbulb />
+                <FaRocket />
               </SkillIcon>
-              <SkillTitle>Innovation</SkillTitle>
+              <SkillTitle>Red Team</SkillTitle>
               <SkillDescription>
-                Creative thinking and innovative approach to challenges
+                Specialized in offensive security, CTF challenges, and penetration testing
               </SkillDescription>
             </SkillCard>
           </SkillsContainer>
