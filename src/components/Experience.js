@@ -245,28 +245,7 @@ const Experience = () => {
       title: "Security Engineer",
       duration: "May 2024 - Present",
       location: "Remote",
-      description: [
-        "Created and fine-tuned SIEM, EDR use cases for optimized threat detection and response",
-        "Worked on critical vulnerabilities on assets, categorizing them by severity & infra/dev and setting SLA for timely remediation",
-        "Responded to on-call security alerts by performing initial triage, investigating potential threats, and escalating incidents as needed",
-        "Collaborated with vendors on troubleshooting tools issues",
-        "Created multiple Dashboard to improve monitoring matrix around security check",
-        "Fine-tuned Web Application Firewall (WAF) rules based on real-world traffic analysis",
-        "Administered Splunk Cloud for log aggregation, detection engineering, dashboarding, and alert optimization",
-        "Led alert reviews to ensure SOP adherence, delivered feedback to analysts, and identified training needs across SOC teams",
-        "Developed and maintained precise SOPs and security documentation",
-        "Collaborated with DevOps to secure CI/CD pipelines and enforce least privilege in AWS & containerized environments",
-        "Performed custom threat hunting, IOC integration, and automated threat blocklisting using Python and n8n workflows",
-        "Created and enforced security policies used by clients in production environments",
-        "Conducted 3rd-party risk assessments, evaluating employee app access requests",
-        "Participated in organizational FedRAMP migrations",
-        "Worked with the internal red team to exploit CI/CD misconfigurations",
-        "Conducted security audits to identify and mitigate risks",
-        "Assisted with internal phishing simulations and hosted employee awareness sessions",
-        "Used reconnaissance tools (Amass, Nmap, Nuclei) to map internet-facing assets",
-        "Wrote Bash and Python scripts to automate asset checks, security tests, and vulnerability assessments",
-        "Led dashboard development for security control, user activity monitoring for insider threat and phishing mail attempts matrix"
-      ],
+      description: [],
       link: "#"
     },
     {
@@ -274,14 +253,7 @@ const Experience = () => {
       title: "SOC Analyst",
       duration: "Dec 2022 - May 2024",
       location: "Bangalore, India",
-      description: [
-        "Operated in a 24/7 rotational shift to monitor, investigate, and mitigate security incidents",
-        "Conducted log analysis and maintenance to ensure effective real-time monitoring and response",
-        "Investigated and resolved escalated security incidents, collaborating with L2 teams for deeper analysis and remediation",
-        "Documented incidents with root-cause analysis",
-        "Followed IR playbooks for common threats",
-        "Generated daily/weekly SOC reports with metrics (alert volumes, false positives)"
-      ],
+      description: [],
       link: "#"
     },
     {
@@ -289,14 +261,7 @@ const Experience = () => {
       title: "Intern",
       duration: "Oct 2021 - Nov 2021",
       location: "Bangalore, India",
-      description: [
-        "Collaborated with engineering and contributing to Research & Development, and documentation efforts",
-        "Assisted in drafting technical reports, presentations, and manuals",
-        "Follow up with different departments to ensure smooth progress on assigned tasks",
-        "Handled sensitive and confidential information with professionalism",
-        "Be proactive, organized, and open to taking on small but meaningful responsibilities",
-        "Prepare presentations and summaries for internal meetings"
-      ],
+      description: [],
       link: "#"
     }
   ];
@@ -381,13 +346,7 @@ const Experience = () => {
                   {exp.location}
                 </JobLocation>
                 
-                <JobDescription>
-                  {exp.description.map((item, itemIndex) => (
-                    <JobDescriptionItem key={itemIndex}>
-                      {item}
-                    </JobDescriptionItem>
-                  ))}
-                </JobDescription>
+                {/* Removed JobDescription section since descriptions are empty */}
               </TimelineContent>
             </TimelineItem>
           ))}
