@@ -3,64 +3,75 @@ import styled from 'styled-components';
 import { FaTrophy, FaCertificate, FaMedal, FaStar, FaAward, FaRibbon } from 'react-icons/fa';
 
 const AwardsSection = styled.section`
-  padding: 5rem 2rem;
+  padding: 100px 0;
   background: #121212;
+  position: relative;
 `;
 
 const AwardsContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const SectionSubtitle = styled.p`
+  font-size: 1.1rem;
   color: #8B0000;
   text-align: center;
-  font-size: 1.1rem;
   margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const AwardsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
+  margin-bottom: 4rem;
 `;
 
 const AwardCard = styled.div`
-  background: rgba(139, 0, 0, 0.05);
+  background: rgba(30, 30, 30, 0.8);
   border: 1px solid rgba(139, 0, 0, 0.2);
   border-radius: 15px;
   padding: 2rem;
   text-align: center;
   transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(139, 0, 0, 0.1), transparent);
-    transition: left 0.5s ease;
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   &:hover {
     transform: translateY(-10px);
     border-color: #8B0000;
     box-shadow: 0 20px 40px rgba(139, 0, 0, 0.15);
-
-    &::before {
-      left: 100%;
-    }
   }
 `;
 
@@ -88,27 +99,40 @@ const AwardDate = styled.span`
   font-weight: 600;
 `;
 
-const AchievementSection = styled.div`
-  margin-top: 4rem;
-  text-align: center;
+const AchievementsContainer = styled.div`
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1.2s ease 0.8s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
-const AchievementTitle = styled.h3`
-  color: #ffffff;
+const AchievementsTitle = styled.h3`
   font-size: 2rem;
-  margin-bottom: 2rem;
+  color: #ffffff;
+  text-align: center;
+  margin-bottom: 3rem;
 `;
 
-const AchievementGrid = styled.div`
+const AchievementsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
 `;
 
 const AchievementItem = styled.div`
   text-align: center;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: scale(1);
+  }
 `;
 
 const AchievementNumber = styled.div`
@@ -132,6 +156,9 @@ const Awards = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -194,21 +221,13 @@ const Awards = () => {
     <AwardsSection id="awards" ref={awardsRef}>
       <AwardsContainer>
         <SectionTitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Awards & Achievements
         </SectionTitle>
         
         <SectionSubtitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.2s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Recognition for my work and dedication
         </SectionSubtitle>
@@ -217,11 +236,7 @@ const Awards = () => {
           {awards.map((award, index) => (
             <AwardCard 
               key={index}
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
-                transition: `all 0.8s ease ${0.3 + index * 0.1}s`
-              }}
+              className={isVisible ? 'animate' : ''}
             >
               <AwardIcon>{award.icon}</AwardIcon>
               <AwardTitle>{award.title}</AwardTitle>
@@ -231,24 +246,20 @@ const Awards = () => {
           ))}
         </AwardsGrid>
 
-        <AchievementSection>
-          <AchievementTitle>Key Achievements</AchievementTitle>
-          <AchievementGrid>
+        <AchievementsContainer className={isVisible ? 'animate' : ''}>
+          <AchievementsTitle>Key Achievements</AchievementsTitle>
+          <AchievementsGrid>
             {achievements.map((achievement, index) => (
               <AchievementItem 
                 key={index}
-                style={{
-                  opacity: isVisible ? 1 : 0,
-                  transform: isVisible ? 'scale(1)' : 'scale(0.8)',
-                  transition: `all 0.8s ease ${1.0 + index * 0.1}s`
-                }}
+                className={isVisible ? 'animate' : ''}
               >
                 <AchievementNumber>{achievement.number}</AchievementNumber>
                 <AchievementLabel>{achievement.label}</AchievementLabel>
               </AchievementItem>
             ))}
-          </AchievementGrid>
-        </AchievementSection>
+          </AchievementsGrid>
+        </AchievementsContainer>
       </AwardsContainer>
     </AwardsSection>
   );

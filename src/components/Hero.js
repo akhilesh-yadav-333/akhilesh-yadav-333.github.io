@@ -6,52 +6,119 @@ const HeroSection = styled.section`
   min-height: 100vh;
   display: flex;
   align-items: center;
-  padding: 0 2rem;
+  background: #121212;
   position: relative;
   overflow: hidden;
+`;
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(139, 0, 0, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(139, 0, 0, 0.05) 0%, transparent 50%);
-    pointer-events: none;
+const FloatingBinary = styled.div`
+  position: absolute;
+  color: rgba(139, 0, 0, 0.4);
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: ${props => props.size}px;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  animation: float ${props => props.duration}s ease-in-out infinite;
+  animation-delay: ${props => props.delay}s;
+
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px) translateX(0px) rotate(0deg);
+      opacity: 0;
+    }
+    10% { 
+      transform: translateY(-20px) translateX(10px) rotate(5deg);
+      opacity: 0.8;
+    }
+    20% { 
+      transform: translateY(-40px) translateX(-15px) rotate(-3deg);
+      opacity: 0.6;
+    }
+    30% { 
+      transform: translateY(-30px) translateX(5px) rotate(2deg);
+      opacity: 0.9;
+    }
+    40% { 
+      transform: translateY(-50px) translateX(20px) rotate(-5deg);
+      opacity: 0.4;
+    }
+    50% { 
+      transform: translateY(-25px) translateX(-10px) rotate(3deg);
+      opacity: 0.7;
+    }
+    60% { 
+      transform: translateY(-35px) translateX(15px) rotate(-2deg);
+      opacity: 0.5;
+    }
+    70% { 
+      transform: translateY(-45px) translateX(-5px) rotate(4deg);
+      opacity: 0.8;
+    }
+    80% { 
+      transform: translateY(-20px) translateX(25px) rotate(-1deg);
+      opacity: 0.3;
+    }
+    90% { 
+      transform: translateY(-30px) translateX(-20px) rotate(2deg);
+      opacity: 0.6;
+    }
   }
 `;
 
 const HeroContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
+  padding: 0 2rem;
+  display: flex;
+  justify-content: center;
   align-items: center;
-  width: 100%;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    text-align: center;
-    gap: 2rem;
-  }
-`;
-
-const HeroContent = styled.div`
+  text-align: center;
+  position: relative;
   z-index: 1;
 `;
 
+const HeroContent = styled.div`
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
 const Greeting = styled.p`
+  font-size: 2rem;
   color: #8B0000;
-  font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 2px;
   margin-bottom: 1rem;
-  min-height: 1.5rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+  min-height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &::after {
+    content: '|';
+    color: #8B0000;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+  }
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
 `;
 
 const Name = styled.h1`
@@ -62,17 +129,16 @@ const Name = styled.h1`
   line-height: 1.1;
   min-height: clamp(2.5rem, 6vw, 4rem);
   position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.4s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  &::after {
-    content: '|';
-    color: #8B0000;
-    animation: blink 1s infinite;
-    margin-left: 2px;
-  }
-
-  @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @media (max-width: 768px) {
@@ -90,6 +156,17 @@ const Title = styled.h2`
   min-height: clamp(1.2rem, 3vw, 2rem);
   position: relative;
   white-space: nowrap;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.6s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   &::after {
     content: '|';
@@ -97,7 +174,7 @@ const Title = styled.h2`
     animation: blink 1s infinite;
     margin-left: 2px;
   }
-
+  
   @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }
@@ -108,185 +185,47 @@ const Description = styled.p`
   font-size: 1.1rem;
   color: #9e9e9e;
   line-height: 1.6;
-  margin-bottom: 2.5rem;
-  max-width: 500px;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.8s;
+  min-height: 4.5rem;
 
-  @media (max-width: 768px) {
-    max-width: 100%;
-  }
-`;
-
-const CTAButton = styled.button`
-  background: #8B0000;
-  color: #ffffff;
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1.1rem;
-  font-weight: 600;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-
-  &:hover {
-    background: #660000;
-    transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
-  }
-
-  &:active {
+  &.animate {
+    opacity: 1;
     transform: translateY(0);
   }
 `;
 
-const HeroImage = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1;
-  position: relative;
-`;
-
-const PhotoContainer = styled.div`
-  position: relative;
-  width: 400px;
-  height: 500px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+const CTAButton = styled.button`
+  background: transparent;
+  border: 2px solid #8B0000;
+  color: #8B0000;
+  padding: 1rem 2rem;
+  border-radius: 5px;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 1s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   &:hover {
-    transform: scale(1.05);
+    background: rgba(139, 0, 0, 0.1);
+    transform: translateY(-2px);
   }
-
-  @media (max-width: 768px) {
-    width: 300px;
-    height: 375px;
-  }
-`;
-
-const ProfileImage = styled.img`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  position: relative;
-  z-index: 2;
-  transition: all 0.3s ease;
-`;
-
-const DesignElement1 = styled.div`
-  position: absolute;
-  top: -20px;
-  left: -30px;
-  width: 150px;
-  height: 150px;
-  background: rgba(139, 0, 0, 0.3);
-  border-radius: 50%;
-  z-index: 1;
-  animation: float 6s ease-in-out infinite;
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(5deg); }
-  }
-`;
-
-const DesignElement2 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  right: -25px;
-  width: 100px;
-  height: 100px;
-  background: rgba(139, 0, 0, 0.2);
-  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-  z-index: 1;
-  animation: float 8s ease-in-out infinite reverse;
-`;
-
-const DesignElement3 = styled.div`
-  position: absolute;
-  top: 50%;
-  left: -40px;
-  width: 80px;
-  height: 120px;
-  background: rgba(139, 0, 0, 0.15);
-  border-radius: 40px 40px 0 0;
-  z-index: 1;
-  animation: float 7s ease-in-out infinite;
-`;
-
-const DesignElement4 = styled.div`
-  position: absolute;
-  bottom: 30%;
-  left: -20px;
-  width: 70px;
-  height: 70px;
-  background: rgba(139, 0, 0, 0.25);
-  border-radius: 50%;
-  z-index: 1;
-  animation: float 5s ease-in-out infinite reverse;
-`;
-
-const DesignElement5 = styled.div`
-  position: absolute;
-  top: 20%;
-  right: -35px;
-  width: 90px;
-  height: 90px;
-  background: rgba(139, 0, 0, 0.2);
-  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  z-index: 1;
-  animation: float 9s ease-in-out infinite;
-`;
-
-const LeftShoulderCover = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 25%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(18, 18, 18, 0.8) 0%, rgba(18, 18, 18, 0.2) 100%);
-  z-index: 3;
-  border-radius: 0 20px 20px 0;
-  
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: radial-gradient(circle at left center, rgba(139, 0, 0, 0.1) 0%, transparent 70%);
-  }
-`;
-
-const OrganicBorder = styled.div`
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 120px;
-  height: 120px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
-  z-index: 1;
-  animation: float 10s ease-in-out infinite;
-`;
-
-const OrganicBorder2 = styled.div`
-  position: absolute;
-  bottom: -15px;
-  left: -20px;
-  width: 100px;
-  height: 80px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-radius: 40% 60% 60% 40% / 40% 40% 60% 60%;
-  z-index: 1;
-  animation: float 8s ease-in-out infinite reverse;
 `;
 
 const Hero = () => {
@@ -295,6 +234,8 @@ const Hero = () => {
   const [title, setTitle] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
+  const [colorCycle, setColorCycle] = useState(0); // 0 = white, 1 = red
+  const [hasShownName, setHasShownName] = useState(false);
   const heroRef = useRef(null);
 
   const fullGreeting = "Hello I'm";
@@ -306,6 +247,9 @@ const Hero = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -333,59 +277,329 @@ const Hero = () => {
           setName(fullName.slice(0, name.length + 1));
         } else {
           setCurrentIndex(2);
+          setHasShownName(true); // Mark that name has been shown
         }
       } else if (currentIndex === 2) {
         if (title.length < fullTitle.length) {
           setTitle(fullTitle.slice(0, title.length + 1));
+        } else {
+          // Wait 2 seconds then restart typewriter with color change
+          setTimeout(() => {
+            setGreeting('');
+            setTitle('');
+            setCurrentIndex(0);
+            setColorCycle(prev => (prev + 1) % 2); // Toggle between 0 and 1
+          }, 2000);
         }
       }
     };
     const timer = setTimeout(typewriter, 100);
     return () => clearTimeout(timer);
-  }, [greeting, name, title, currentIndex, isVisible]);
+  }, [greeting, name, title, currentIndex, isVisible, colorCycle]);
+
+  // Dynamic color based on color cycle
+  const getTextColor = () => {
+    return colorCycle === 0 ? '#ffffff' : '#8B0000';
+  };
 
   return (
     <HeroSection id="home" ref={heroRef}>
       <HeroContainer>
         <HeroContent 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
-          <Greeting>{greeting}</Greeting>
-          <Name>{name}</Name>
-          <Title>{title}</Title>
-          <Description>
+          <Greeting className={isVisible ? 'animate' : ''}>{greeting}</Greeting>
+          <Name 
+            className={isVisible ? 'animate' : ''}
+            style={{ color: hasShownName ? '#ffffff' : getTextColor() }}
+          >
+            {hasShownName ? fullName : name}
+          </Name>
+          <Title 
+            className={isVisible ? 'animate' : ''}
+            style={{ color: getTextColor() }}
+          >
+            {title}
+          </Title>
+          <Description className={isVisible ? 'animate' : ''}>
             Entry-level penetration tester with a strong foundation in vulnerability assessment and blue team defense, now specializing in offensive security. Hands-on experience in Kubernetes exploitation, reverse engineering, and full-stack pentesting through self-hosted labs, Kubernetes Goat, and pwn.college program security challenges.
           </Description>
-          <CTAButton>
+          <CTAButton className={isVisible ? 'animate' : ''}>
             Get Started <FaArrowRight />
           </CTAButton>
         </HeroContent>
-        <HeroImage 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
-            transition: 'all 0.8s ease 0.3s'
-          }}
+        
+        {/* Floating Binary Background Elements */}
+        <FloatingBinary 
+          size={12} 
+          duration={6} 
+          delay={0} 
+          style={{ top: '20%', left: '15%' }}
         >
-          <PhotoContainer>
-            <DesignElement1 />
-            <DesignElement2 />
-            <DesignElement3 />
-            <DesignElement4 />
-            <DesignElement5 />
-            <OrganicBorder />
-            <OrganicBorder2 />
-            <ProfileImage
-              src="/images/profile-photo.jpg"
-              alt="Akhilesh Yadav - Security Professional"
-            />
-            <LeftShoulderCover />
-          </PhotoContainer>
-        </HeroImage>
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={18} 
+          duration={8} 
+          delay={1} 
+          style={{ top: '30%', right: '20%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={14} 
+          duration={7} 
+          delay={2} 
+          style={{ top: '50%', left: '10%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={16} 
+          duration={9} 
+          delay={3} 
+          style={{ top: '60%', right: '15%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={20} 
+          duration={5} 
+          delay={4} 
+          style={{ top: '70%', left: '25%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={13} 
+          duration={10} 
+          delay={1.5} 
+          style={{ top: '80%', right: '30%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={17} 
+          duration={6.5} 
+          delay={2.5} 
+          style={{ top: '25%', left: '60%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={11} 
+          duration={8.5} 
+          delay={3.5} 
+          style={{ top: '45%', right: '40%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={19} 
+          duration={7.5} 
+          delay={0.5} 
+          style={{ top: '75%', left: '70%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={15} 
+          duration={9.5} 
+          delay={4.5} 
+          style={{ top: '35%', left: '80%' }}
+        >
+          1
+        </FloatingBinary>
+
+        {/* Additional 20 elements for 3x quantity */}
+        <FloatingBinary 
+          size={22} 
+          duration={6.5} 
+          delay={5} 
+          style={{ top: '15%', left: '45%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={16} 
+          duration={8.2} 
+          delay={5.5} 
+          style={{ top: '40%', right: '60%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={14} 
+          duration={7.8} 
+          delay={6} 
+          style={{ top: '65%', left: '35%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={18} 
+          duration={9.2} 
+          delay={6.5} 
+          style={{ top: '85%', right: '45%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={21} 
+          duration={5.8} 
+          delay={7} 
+          style={{ top: '10%', left: '85%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={13} 
+          duration={10.5} 
+          delay={7.5} 
+          style={{ top: '55%', right: '75%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={17} 
+          duration={6.8} 
+          delay={8} 
+          style={{ top: '75%', left: '55%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={12} 
+          duration={8.8} 
+          delay={8.5} 
+          style={{ top: '25%', right: '85%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={19} 
+          duration={7.2} 
+          delay={9} 
+          style={{ top: '45%', left: '90%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={15} 
+          duration={9.8} 
+          delay={9.5} 
+          style={{ top: '90%', right: '10%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={23} 
+          duration={6.2} 
+          delay={10} 
+          style={{ top: '5%', left: '30%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={16} 
+          duration={8.6} 
+          delay={10.5} 
+          style={{ top: '35%', right: '90%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={14} 
+          duration={7.4} 
+          delay={11} 
+          style={{ top: '60%', left: '5%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={18} 
+          duration={9.4} 
+          delay={11.5} 
+          style={{ top: '80%', right: '60%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={20} 
+          duration={5.6} 
+          delay={12} 
+          style={{ top: '20%', left: '75%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={13} 
+          duration={10.2} 
+          delay={12.5} 
+          style={{ top: '50%', right: '5%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={17} 
+          duration={6.4} 
+          delay={13} 
+          style={{ top: '70%', left: '90%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={11} 
+          duration={8.4} 
+          delay={13.5} 
+          style={{ top: '30%', right: '50%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={19} 
+          duration={7.6} 
+          delay={14} 
+          style={{ top: '85%', left: '40%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={15} 
+          duration={9.6} 
+          delay={14.5} 
+          style={{ top: '15%', right: '35%' }}
+        >
+          1
+        </FloatingBinary>
       </HeroContainer>
     </HeroSection>
   );

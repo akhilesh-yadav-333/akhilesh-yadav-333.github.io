@@ -3,43 +3,68 @@ import styled from 'styled-components';
 import { FaShieldAlt, FaServer, FaLaptopCode, FaChartLine, FaUsers, FaMobile } from 'react-icons/fa';
 
 const ServicesSection = styled.section`
-  padding: 5rem 2rem;
+  padding: 100px 0;
   background: #121212;
+  position: relative;
 `;
 
 const ServicesContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const SectionSubtitle = styled.p`
+  font-size: 1.1rem;
   color: #8B0000;
   text-align: center;
-  font-size: 1.1rem;
   margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const ServicesGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
 `;
 
 const ServiceCard = styled.div`
-  background: rgba(139, 0, 0, 0.05);
+  background: rgba(30, 30, 30, 0.8);
   border: 1px solid rgba(139, 0, 0, 0.2);
   border-radius: 15px;
   padding: 2rem;
-  text-align: center;
   transition: all 0.3s ease;
-  cursor: pointer;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   &:hover {
     transform: translateY(-10px);
@@ -94,6 +119,9 @@ const Services = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -149,21 +177,13 @@ const Services = () => {
     <ServicesSection id="services" ref={servicesRef}>
       <ServicesContainer>
         <SectionTitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           What I Do
         </SectionTitle>
         
         <SectionSubtitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.2s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Services I offer to help secure your digital assets
         </SectionSubtitle>
@@ -172,11 +192,7 @@ const Services = () => {
           {services.map((service, index) => (
             <ServiceCard 
               key={index}
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
-                transition: `all 0.8s ease ${0.3 + index * 0.1}s`
-              }}
+              className={isVisible ? 'animate' : ''}
             >
               <ServiceIcon>{service.icon}</ServiceIcon>
               <ServiceTitle>{service.title}</ServiceTitle>

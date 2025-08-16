@@ -23,7 +23,7 @@ const SectionTitle = styled.h2`
   margin-bottom: 1rem;
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.8s ease;
+  transition: all 1.2s ease;
 
   &.animate {
     opacity: 1;
@@ -38,7 +38,7 @@ const SectionSubtitle = styled.p`
   margin-bottom: 4rem;
   opacity: 0;
   transform: translateY(30px);
-  transition: all 0.8s ease 0.2s;
+  transition: all 1.2s ease 0.2s;
 
   &.animate {
     opacity: 1;
@@ -72,7 +72,7 @@ const TimelineItem = styled.div`
   margin-bottom: 4rem;
   opacity: 0;
   transform: translateY(50px);
-  transition: all 0.8s ease;
+  transition: all 1.2s ease;
 
   &.animate {
     opacity: 1;
@@ -258,6 +258,12 @@ const Experience = () => {
             const elementId = entry.target.dataset.elementId;
             if (elementId) {
               setAnimatedElements(prev => [...prev, elementId]);
+            }
+          } else {
+            // Reset animation when element goes out of view
+            const elementId = entry.target.dataset.elementId;
+            if (elementId) {
+              setAnimatedElements(prev => prev.filter(id => id !== elementId));
             }
           }
         });

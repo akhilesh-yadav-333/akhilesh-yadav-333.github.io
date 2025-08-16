@@ -3,27 +3,46 @@ import styled from 'styled-components';
 import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 
 const ContactSection = styled.section`
-  padding: 5rem 2rem;
-  background: #1e1e1e;
+  padding: 100px 0;
+  background: #121212;
+  position: relative;
 `;
 
 const ContactContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const SectionSubtitle = styled.p`
+  font-size: 1.1rem;
   color: #8B0000;
   text-align: center;
-  font-size: 1.1rem;
   margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const ContactContent = styled.div`
@@ -38,7 +57,14 @@ const ContactContent = styled.div`
 `;
 
 const ContactInfo = styled.div`
-  color: #9e9e9e;
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: all 1.2s ease 0.4s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateX(0);
+  }
 `;
 
 const ContactItem = styled.div`
@@ -91,10 +117,15 @@ const SocialLink = styled.a`
   }
 `;
 
-const ContactForm = styled.form`
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+const ContactForm = styled.div`
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 1.2s ease 0.6s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateX(0);
+  }
 `;
 
 const FormGroup = styled.div`
@@ -196,6 +227,9 @@ const Contact = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -226,32 +260,20 @@ const Contact = () => {
     <ContactSection id="contact" ref={contactRef}>
       <ContactContainer>
         <SectionTitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Get In Touch
         </SectionTitle>
         
         <SectionSubtitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.2s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Let's discuss your security needs
         </SectionSubtitle>
 
         <ContactContent>
           <ContactInfo 
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
-              transition: 'all 0.8s ease 0.4s'
-            }}
+            className={isVisible ? 'animate' : ''}
           >
             <ContactItem>
               <ContactIcon><FaEnvelope /></ContactIcon>
@@ -291,11 +313,7 @@ const Contact = () => {
           </ContactInfo>
 
           <ContactForm 
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
-              transition: 'all 0.8s ease 0.6s'
-            }}
+            className={isVisible ? 'animate' : ''}
           >
             <form onSubmit={handleSubmit}>
               <FormGroup>

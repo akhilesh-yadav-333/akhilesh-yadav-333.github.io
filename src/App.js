@@ -12,7 +12,7 @@ import PageLoader from './components/PageLoader';
 import './App.css';
 
 const AppContainer = styled.div`
-  background: linear-gradient(135deg, #121212 0%, #1e1e1e 100%);
+  background: #121212;
   min-height: 100vh;
   color: #e6f1ff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;

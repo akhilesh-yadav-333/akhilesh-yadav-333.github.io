@@ -20,6 +20,7 @@ body {
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  background: #121212;
 }
 
 /* Custom scrollbar */
@@ -236,4 +237,17 @@ textarea:focus {
 .hover-lift:hover {
   transform: translateY(-5px);
   box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .mobile-hidden {
+    display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .desktop-hidden {
+    display: none;
+  }
 }

@@ -3,34 +3,110 @@ import styled from 'styled-components';
 import { FaShieldAlt, FaCode, FaRocket } from 'react-icons/fa';
 
 const AboutSection = styled.section`
-  padding: 5rem 2rem;
-  background: #1e1e1e;
+  padding: 100px 0;
+  background: #121212;
+  position: relative;
+  overflow: hidden;
+`;
+
+const FloatingBinary = styled.div`
+  position: absolute;
+  color: rgba(139, 0, 0, 0.4);
+  font-family: 'Courier New', monospace;
+  font-weight: bold;
+  font-size: ${props => props.size}px;
+  user-select: none;
+  pointer-events: none;
+  z-index: 0;
+  animation: float ${props => props.duration}s ease-in-out infinite;
+  animation-delay: ${props => props.delay}s;
+
+  @keyframes float {
+    0%, 100% { 
+      transform: translateY(0px) translateX(0px) rotate(0deg);
+      opacity: 0;
+    }
+    10% { 
+      transform: translateY(-20px) translateX(10px) rotate(5deg);
+      opacity: 0.8;
+    }
+    20% { 
+      transform: translateY(-40px) translateX(-15px) rotate(-3deg);
+      opacity: 0.6;
+    }
+    30% { 
+      transform: translateY(-30px) translateX(5px) rotate(2deg);
+      opacity: 0.9;
+    }
+    40% { 
+      transform: translateY(-50px) translateX(20px) rotate(-5deg);
+      opacity: 0.4;
+    }
+    50% { 
+      transform: translateY(-25px) translateX(-10px) rotate(3deg);
+      opacity: 0.7;
+    }
+    60% { 
+      transform: translateY(-35px) translateX(15px) rotate(-2deg);
+      opacity: 0.5;
+    }
+    70% { 
+      transform: translateY(-45px) translateX(-5px) rotate(4deg);
+      opacity: 0.8;
+    }
+    80% { 
+      transform: translateY(-20px) translateX(25px) rotate(-1deg);
+      opacity: 0.3;
+    }
+    90% { 
+      transform: translateY(-30px) translateX(-20px) rotate(2deg);
+      opacity: 0.6;
+    }
+  }
 `;
 
 const AboutContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const SectionSubtitle = styled.p`
+  font-size: 1.1rem;
   color: #8B0000;
   text-align: center;
-  font-size: 1.1rem;
   margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const AboutContent = styled.div`
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  align-items: start;
 
   @media (max-width: 768px) {
     grid-template-columns: 1fr;
@@ -38,53 +114,35 @@ const AboutContent = styled.div`
   }
 `;
 
-const AboutText = styled.div`
-  color: #9e9e9e;
-  line-height: 1.8;
-`;
-
-const AboutParagraph = styled.p`
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-`;
-
-const SkillsContainer = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 2rem;
-`;
-
-const SkillCard = styled.div`
-  background: rgba(139, 0, 0, 0.05);
-  border: 1px solid rgba(139, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 1.5rem;
+const AboutBlock = styled.div`
   text-align: center;
-  transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
 
-  &:hover {
-    transform: translateY(-5px);
-    border-color: #8B0000;
-    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.1);
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
   }
 `;
 
-const SkillIcon = styled.div`
-  font-size: 2.5rem;
+const AboutIcon = styled.div`
+  font-size: 3rem;
   color: #8B0000;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 `;
 
-const SkillTitle = styled.h3`
+const AboutBlockTitle = styled.h3`
   color: #ffffff;
-  margin-bottom: 0.5rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
 `;
 
-const SkillDescription = styled.p`
+const AboutBlockText = styled.p`
   color: #9e9e9e;
-  font-size: 0.9rem;
   line-height: 1.6;
+  font-size: 1rem;
 `;
 
 const About = () => {
@@ -96,6 +154,9 @@ const About = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -112,82 +173,127 @@ const About = () => {
     <AboutSection id="about" ref={aboutRef}>
       <AboutContainer>
         <SectionTitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           About Me
         </SectionTitle>
         
         <SectionSubtitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.2s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Get to know me better
         </SectionSubtitle>
 
         <AboutContent>
-          <AboutText 
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(-50px)',
-              transition: 'all 0.8s ease 0.4s'
-            }}
+          <AboutBlock 
+            className={isVisible ? 'animate' : ''}
           >
-            <AboutParagraph>
-              I'm Akhilesh Yadav, a Security Engineer with robust hands-on experience in cloud security, email security, SIEM/EDR platforms (Splunk, QRadar, CrowdStrike), and security automation. Skilled in incident response, threat detection (MITRE ATT&CK), vulnerability management, and secure configurations in AWS environments.
-            </AboutParagraph>
-            <AboutParagraph>
-              With a strong scripting background (Python, Bash), I specialize in DevSecOps pipelines, compliance (ISO 27001, NIST RMF), and WAF optimization. I've demonstrated success in streamlining SOC operations, building security policies, and improving threat visibility across diverse infrastructures.
-            </AboutParagraph>
-            <AboutParagraph>
-              Currently working as a Security Engineer at Veltris, I'm passionate about offensive security and continuously learning through platforms like TryHackMe, HackTheBox, and CTF challenges to stay current with emerging threats and response strategies.
-            </AboutParagraph>
-          </AboutText>
+            <AboutIcon>
+              <FaShieldAlt />
+            </AboutIcon>
+            <AboutBlockTitle>Blue Team</AboutBlockTitle>
+            <AboutBlockText>
+              Defensive security operations, incident response, and threat monitoring expertise
+            </AboutBlockText>
+          </AboutBlock>
 
-          <SkillsContainer 
-            style={{
-              opacity: isVisible ? 1 : 0,
-              transform: isVisible ? 'translateX(0)' : 'translateX(50px)',
-              transition: 'all 0.8s ease 0.6s'
-            }}
+          <AboutBlock 
+            className={isVisible ? 'animate' : ''}
           >
-            <SkillCard>
-              <SkillIcon>
-                <FaShieldAlt />
-              </SkillIcon>
-              <SkillTitle>Security Expertise</SkillTitle>
-              <SkillDescription>
-                Comprehensive knowledge in cybersecurity, penetration testing, and security operations
-              </SkillDescription>
-            </SkillCard>
+            <AboutIcon>
+              <FaCode />
+            </AboutIcon>
+            <AboutBlockTitle>Security Expertise</AboutBlockTitle>
+            <AboutBlockText>
+              Comprehensive knowledge in cybersecurity, penetration testing, and security operations
+            </AboutBlockText>
+          </AboutBlock>
 
-            <SkillCard>
-              <SkillIcon>
-                <FaCode />
-              </SkillIcon>
-              <SkillTitle>Technical Skills</SkillTitle>
-              <SkillDescription>
-                Proficient in Python, Bash, PowerShell, and various security tools and platforms
-              </SkillDescription>
-            </SkillCard>
-
-            <SkillCard>
-              <SkillIcon>
-                <FaRocket />
-              </SkillIcon>
-              <SkillTitle>Red Team</SkillTitle>
-              <SkillDescription>
-                Specialized in offensive security, CTF challenges, and penetration testing
-              </SkillDescription>
-            </SkillCard>
-          </SkillsContainer>
+          <AboutBlock 
+            className={isVisible ? 'animate' : ''}
+          >
+            <AboutIcon>
+              <FaRocket />
+            </AboutIcon>
+            <AboutBlockTitle>Red Team</AboutBlockTitle>
+            <AboutBlockText>
+              Specialized in offensive security, CTF challenges, and penetration testing
+            </AboutBlockText>
+          </AboutBlock>
         </AboutContent>
+
+        {/* Floating Binary Background Elements for About Section */}
+        <FloatingBinary 
+          size={14} 
+          duration={7.2} 
+          delay={0} 
+          style={{ top: '10%', left: '5%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={19} 
+          duration={8.8} 
+          delay={1.2} 
+          style={{ top: '20%', right: '8%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={16} 
+          duration={6.5} 
+          delay={2.8} 
+          style={{ top: '60%', left: '12%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={21} 
+          duration={9.4} 
+          delay={1.8} 
+          style={{ top: '70%', right: '15%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={13} 
+          duration={7.8} 
+          delay={3.2} 
+          style={{ top: '40%', left: '85%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={18} 
+          duration={8.2} 
+          delay={0.8} 
+          style={{ top: '50%', right: '85%' }}
+        >
+          1
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={15} 
+          duration={6.8} 
+          delay={2.4} 
+          style={{ top: '80%', left: '75%' }}
+        >
+          0
+        </FloatingBinary>
+        
+        <FloatingBinary 
+          size={20} 
+          duration={9.6} 
+          delay={1.6} 
+          style={{ top: '30%', right: '75%' }}
+        >
+          1
+        </FloatingBinary>
       </AboutContainer>
     </AboutSection>
   );

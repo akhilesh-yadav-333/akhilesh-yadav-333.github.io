@@ -3,20 +3,31 @@ import styled from 'styled-components';
 import { FaGithub, FaEye } from 'react-icons/fa';
 
 const PortfolioSection = styled.section`
-  padding: 5rem 2rem;
-  background: #1e1e1e;
+  padding: 100px 0;
+  background: #121212;
+  position: relative;
 `;
 
 const PortfolioContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
+  padding: 0 2rem;
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.5rem;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 800;
   color: #ffffff;
   text-align: center;
   margin-bottom: 1rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const SectionSubtitle = styled.p`
@@ -24,6 +35,14 @@ const SectionSubtitle = styled.p`
   text-align: center;
   font-size: 1.1rem;
   margin-bottom: 4rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.2s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const FilterButtons = styled.div`
@@ -32,6 +51,14 @@ const FilterButtons = styled.div`
   gap: 1rem;
   margin-bottom: 3rem;
   flex-wrap: wrap;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.4s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const FilterButton = styled.button`
@@ -55,14 +82,30 @@ const PortfolioGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 2rem;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.6s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 `;
 
 const ProjectCard = styled.div`
-  background: rgba(139, 0, 0, 0.05);
+  background: rgba(30, 30, 30, 0.8);
   border: 1px solid rgba(139, 0, 0, 0.2);
   border-radius: 15px;
   overflow: hidden;
   transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(50px);
+  transition: all 1.2s ease;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   &:hover {
     transform: translateY(-10px);
@@ -151,6 +194,9 @@ const Portfolio = () => {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true);
+        } else {
+          // Reset animation when element goes out of view
+          setIsVisible(false);
         }
       },
       { threshold: 0.1 }
@@ -242,31 +288,19 @@ const Portfolio = () => {
     <PortfolioSection id="portfolio" ref={portfolioRef}>
       <PortfolioContainer>
         <SectionTitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           Some Things I've Built
         </SectionTitle>
         
         <SectionSubtitle 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.2s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           A selection of my recent work and projects
         </SectionSubtitle>
 
         <FilterButtons 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.4s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           {filters.map((filter) => (
             <FilterButton
@@ -280,20 +314,12 @@ const Portfolio = () => {
         </FilterButtons>
 
         <PortfolioGrid 
-          style={{
-            opacity: isVisible ? 1 : 0,
-            transform: isVisible ? 'translateY(0)' : 'translateY(30px)',
-            transition: 'all 0.8s ease 0.6s'
-          }}
+          className={isVisible ? 'animate' : ''}
         >
           {filteredProjects.map((project, index) => (
             <ProjectCard 
               key={project.id}
-              style={{
-                opacity: isVisible ? 1 : 0,
-                transform: isVisible ? 'translateY(0)' : 'translateY(50px)',
-                transition: `all 0.8s ease ${0.6 + index * 0.1}s`
-              }}
+              className={isVisible ? 'animate' : ''}
             >
               <ProjectImage>
                 <ProjectImagePlaceholder>{project.image}</ProjectImagePlaceholder>
