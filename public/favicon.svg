@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!-- Background circle with dark grey -->
+  <circle cx="16" cy="16" r="15" fill="#2d2d2d" stroke="#8B0000" stroke-width="2"/>
+  
+  <!-- Cipher symbol - stylized "C" with lock elements -->
+  <path d="M12 10 Q8 10 8 16 Q8 22 12 22 L20 22 Q24 22 24 18 L24 16 Q24 14 22 14 L20 14 Q18 14 18 16 L18 18 L12 18 Q10 18 10 16 Q10 14 12 14 L20 14" 
+        fill="none" stroke="#8B0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Lock symbol elements -->
+  <rect x="14" y="12" width="4" height="6" rx="1" fill="#8B0000"/>
+  <circle cx="16" cy="15" r="1" fill="#2d2d2d"/>
+  
+  <!-- Crimson accent dots -->
+  <circle cx="10" cy="10" r="1.5" fill="#8B0000"/>
+  <circle cx="22" cy="22" r="1.5" fill="#8B0000"/>
+  <circle cx="10" cy="22" r="1.5" fill="#8B0000"/>
+  <circle cx="22" cy="10" r="1.5" fill="#8B0000"/>
+</svg>
