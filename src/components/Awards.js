@@ -147,6 +147,54 @@ const AchievementLabel = styled.div`
   font-size: 1rem;
 `;
 
+const PenetrationReportsSection = styled.div`
+  margin-top: 4rem;
+  padding: 3rem 2rem;
+  background: rgba(30, 30, 30, 0.3);
+  border-radius: 12px;
+  border: 1px solid rgba(139, 0, 0, 0.2);
+  backdrop-filter: blur(10px);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 1.2s ease 0.8s;
+
+  &.animate {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+const PenetrationReportsTitle = styled.h3`
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #8B0000;
+  text-align: center;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+`;
+
+const PenetrationReportsContent = styled.div`
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+`;
+
+const PenetrationReportsText = styled.p`
+  color: #d0d0d0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+`;
+
+const PenetrationReportsCTA = styled.p`
+  color: #8B0000;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  font-style: italic;
+`;
+
 const Awards = () => {
   const [isVisible, setIsVisible] = useState(false);
   const awardsRef = useRef(null);
@@ -192,8 +240,8 @@ const Awards = () => {
     },
     {
       icon: <FaStar />,
-      title: "Kubernetes Security Specialist",
-      description: "Hands-on experience in Kubernetes exploitation, container security, and cloud-native penetration testing through self-hosted labs.",
+      title: "External Network Penetration Testing",
+      description: "Successfully conducted external network penetration testing assessments, identifying critical vulnerabilities and providing actionable remediation strategies.",
       date: "2023 - Present"
     },
     {
@@ -260,6 +308,22 @@ const Awards = () => {
             ))}
           </AchievementsGrid>
         </AchievementsContainer>
+
+        <PenetrationReportsSection className={isVisible ? 'animate' : ''}>
+          <PenetrationReportsTitle>Custom Penetration Testing Solutions</PenetrationReportsTitle>
+          <PenetrationReportsContent>
+            <PenetrationReportsText>
+              I'm open to discussing any specific penetration testing requirements you may have. 
+              Whether it's web application security, network infrastructure, cloud environments, 
+              or specialized security assessments, I can tailor my approach to meet your unique needs.
+            </PenetrationReportsText>
+            <PenetrationReportsCTA>
+              Let's discuss your specific security requirements and how I can help. I can provide 
+              report templates and customize my methodology according to your industry standards 
+              and compliance needs.
+            </PenetrationReportsCTA>
+          </PenetrationReportsContent>
+        </PenetrationReportsSection>
       </AwardsContainer>
     </AwardsSection>
   );
