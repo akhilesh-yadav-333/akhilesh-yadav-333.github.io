@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Background circle with dark grey -->
+  <circle cx="256" cy="256" r="240" fill="#2d2d2d" stroke="#8B0000" stroke-width="8"/>
+  
+  <!-- Cipher symbol - stylized "C" with lock elements -->
+  <path d="M192 160 Q128 160 128 256 Q128 352 192 352 L320 352 Q384 352 384 288 L384 256 Q384 224 352 224 L320 224 Q288 224 288 256 L288 288 L192 288 Q160 288 160 256 Q160 224 192 224 L320 224" 
+        fill="none" stroke="#8B0000" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Lock symbol elements -->
+  <rect x="224" y="192" width="64" height="96" rx="8" fill="#8B0000"/>
+  <circle cx="256" cy="240" r="16" fill="#2d2d2d"/>
+  
+  <!-- Crimson accent dots -->
+  <circle cx="160" cy="160" r="24" fill="#8B0000"/>
+  <circle cx="352" cy="352" r="24" fill="#8B0000"/>
+  <circle cx="160" cy="352" r="24" fill="#8B0000"/>
+  <circle cx="352" cy="160" r="24" fill="#8B0000"/>
+  
+  <!-- Text "CipherCrimson" -->
+  <text x="256" y="420" font-family="Arial, sans-serif" font-size="48" font-weight="bold" text-anchor="middle" fill="#8B0000">CipherCrimson</text>
+</svg>
