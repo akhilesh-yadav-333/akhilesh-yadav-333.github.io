@@ -186,35 +186,35 @@ const Awards = () => {
     },
     {
       icon: <FaMedal />,
-      title: "Security Engineer at Veltris",
-      description: "Leading security operations, SIEM management, and DevSecOps initiatives for enterprise clients.",
-      date: "May 2024 - Present"
-    },
-    {
-      icon: <FaStar />,
-      title: "SOC Analyst Experience",
-      description: "24/7 security monitoring, incident response, and threat analysis in enterprise environments.",
-      date: "December 2022 - May 2024"
-    },
-    {
-      icon: <FaAward />,
       title: "Red Team Enthusiast",
-      description: "Active participation in CTF challenges, TryHackMe, and HackTheBox for continuous skill development.",
+      description: "Active participation in CTF challenges, TryHackMe, and HackTheBox for continuous skill development and offensive security practice.",
       date: "Ongoing"
     },
     {
+      icon: <FaStar />,
+      title: "Kubernetes Security Specialist",
+      description: "Hands-on experience in Kubernetes exploitation, container security, and cloud-native penetration testing through self-hosted labs.",
+      date: "2023 - Present"
+    },
+    {
+      icon: <FaAward />,
+      title: "Reverse Engineering Skills",
+      description: "Proficient in malware analysis, binary exploitation, and reverse engineering techniques for security research and threat hunting.",
+      date: "2023 - Present"
+    },
+    {
       icon: <FaRibbon />,
-      title: "Bachelor's in Computer Science",
-      description: "Graduated from SVCE, Bangalore with focus on cybersecurity and engineering principles.",
-      date: "2018-2022"
+      title: "Full-Stack Pentesting",
+      description: "Comprehensive web application security testing, API security assessment, and infrastructure penetration testing expertise.",
+      date: "2023 - Present"
     }
   ];
 
   const achievements = [
-    { number: "2+", label: "Years Security Experience" },
-    { number: "3+", label: "Security Certifications" },
-    { number: "10+", label: "Security Tools Mastered" },
-    { number: "24/7", label: "SOC Operations" }
+    { number: "2", label: "Professional Certifications" },
+    { number: "5+", label: "Security Specializations" },
+    { number: "24/7", label: "Learning Commitment" },
+    { number: "Ongoing", label: "Skill Development" }
   ];
 
   return (
@@ -223,13 +223,13 @@ const Awards = () => {
         <SectionTitle 
           className={isVisible ? 'animate' : ''}
         >
-          Awards & Achievements
+          Career Highlights
         </SectionTitle>
         
         <SectionSubtitle 
           className={isVisible ? 'animate' : ''}
         >
-          Recognition for my work and dedication
+          Key achievements, certifications, and career milestones
         </SectionSubtitle>
 
         <AwardsGrid>
@@ -247,7 +247,7 @@ const Awards = () => {
         </AwardsGrid>
 
         <AchievementsContainer className={isVisible ? 'animate' : ''}>
-          <AchievementsTitle>Key Achievements</AchievementsTitle>
+          <AchievementsTitle>Career Highlights</AchievementsTitle>
           <AchievementsGrid>
             {achievements.map((achievement, index) => (
               <AchievementItem 

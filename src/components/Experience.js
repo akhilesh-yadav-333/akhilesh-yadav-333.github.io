@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaExternalLinkAlt } from 'react-icons/fa';
+import { FaBriefcase, FaCalendarAlt, FaMapMarkerAlt, FaExternalLinkAlt, FaArrowRight } from 'react-icons/fa';
 
 const ExperienceSection = styled.section`
   padding: 100px 0;
@@ -69,7 +69,7 @@ const TimelineContainer = styled.div`
 
 const TimelineItem = styled.div`
   position: relative;
-  margin-bottom: 4rem;
+  margin-bottom: 3rem;
   opacity: 0;
   transform: translateY(50px);
   transition: all 1.2s ease;
@@ -115,7 +115,7 @@ const TimelineItem = styled.div`
     }
 
     .timeline-dot {
-      left: calc(50% - 15px);
+      right: calc(50% - 15px);
 
       @media (max-width: 768px) {
         left: 20px;
@@ -160,53 +160,58 @@ const TimelineDot = styled.div`
 `;
 
 const TimelineContent = styled.div`
-  background: rgba(30, 30, 30, 0.8);
-  border: 1px solid rgba(139, 0, 0, 0.3);
-  border-radius: 12px;
-  padding: 2rem;
-  backdrop-filter: blur(10px);
+  padding: 1.8rem;
   transition: all 0.3s ease;
-
-  &:hover {
-    transform: translateY(-5px);
-    border-color: rgba(139, 0, 0, 0.6);
-    box-shadow: 0 20px 40px rgba(139, 0, 0, 0.2);
-  }
+  text-align: left;
+  background: rgba(30, 30, 30, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
 `;
 
+
+
 const CompanyName = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
+  color: #8B0000;
+  margin-bottom: 1rem;
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
 `;
 
 const JobTitle = styled.h4`
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  color: #8B0000;
-  margin-bottom: 1rem;
+  color: #ffffff;
+  margin-bottom: 0.8rem;
+  text-transform: capitalize;
+  line-height: 1.3;
 `;
 
 const JobDuration = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #9e9e9e;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  color: #8B0000;
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  font-weight: 500;
+  opacity: 0.9;
 `;
 
 const JobLocation = styled.div`
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #9e9e9e;
-  font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  color: #8B0000;
+  font-size: 0.95rem;
+  margin-bottom: 1.2rem;
+  font-weight: 500;
+  opacity: 0.9;
 `;
 
 const CompanyLink = styled.a`
@@ -219,34 +224,143 @@ const CompanyLink = styled.a`
   }
 `;
 
+const JobDescription = styled.div`
+  margin-top: 1.2rem;
+  transition: all 0.3s ease;
+  max-height: ${props => props.expanded ? '500px' : '0'};
+  overflow: hidden;
+  opacity: ${props => props.expanded ? '1' : '0'};
+  transform: ${props => props.expanded ? 'translateY(0)' : 'translateY(-10px)'};
+
+  ul {
+    margin: 0;
+    padding-left: 0;
+    color: #d0d0d0;
+    line-height: 1.6;
+    list-style: none;
+  }
+
+  li {
+    margin-bottom: 0.7rem;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+`;
+
+const ExpandButton = styled.button`
+  background: #8B0000;
+  border: none;
+  color: #ffffff;
+  padding: 0.7rem 1.3rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-top: 1.2rem;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+
+  &:hover {
+    background: #ffffff;
+    color: #8B0000;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(139, 0, 0, 0.3);
+  }
+`;
+
+const ShowMoreButton = styled.button`
+  background: transparent;
+  border: 2px solid #8B0000;
+  color: #8B0000;
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin: 2rem auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: #8B0000;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.3);
+  }
+`;
+
 const Experience = () => {
   const [animatedElements, setAnimatedElements] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
   const sectionRef = useRef(null);
 
+  const toggleExpanded = (index) => {
+    setExpandedItems(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
   const experiences = [
+    {
+      company: "Freelance",
+      title: "Security Contractor",
+      duration: "Feb 2025 - Present",
+      location: "Remote",
+      description: [
+        "Specializing in offensive security and penetration testing for various clients",
+        "Conducting comprehensive vulnerability assessments and security audits",
+        "Performing web application, network, and infrastructure penetration testing",
+        "Delivering detailed reports with actionable remediation recommendations",
+        "Working with diverse technologies including cloud platforms and containerized environments"
+      ],
+      link: "https://www.upwork.com/freelancers/~01784d6d495e8e71ce?mp_source=share"
+    },
     {
       company: "Veltris",
       title: "Security Engineer",
       duration: "May 2024 - Present",
       location: "Remote",
-      description: [],
-      link: "#"
+      description: [
+        "Implementing and maintaining security controls across enterprise infrastructure",
+        "Conducting security assessments and vulnerability management",
+        "Collaborating with development teams on secure coding practices",
+        "Monitoring and responding to security incidents and threats",
+        "Contributing to security policy development and compliance initiatives"
+      ],
+      link: "https://www.veltris.com/"
     },
     {
       company: "Future Netwings Solutions Pvt. Ltd",
-      title: "SOC Analyst",
+      title: "SOC Trainee",
       duration: "Dec 2022 - May 2024",
       location: "Bangalore, India",
-      description: [],
-      link: "#"
+      description: [
+        "Monitored security events and alerts using SIEM tools and security monitoring platforms",
+        "Investigated and responded to security incidents in real-time",
+        "Conducted threat hunting and analysis of suspicious activities",
+        "Maintained and updated security playbooks and response procedures",
+        "Collaborated with incident response teams for threat containment and eradication"
+      ],
+      link: "https://futurenetwings.com/"
     },
     {
       company: "Mahindra Defence",
       title: "Intern",
       duration: "Oct 2021 - Nov 2021",
       location: "Bangalore, India",
-      description: [],
-      link: "#"
+      description: [
+        "Assisted in security assessments of defense systems and infrastructure",
+        "Learned about industrial security protocols and defense industry standards",
+        "Participated in security awareness training and documentation",
+        "Gained exposure to military-grade security requirements and compliance"
+      ],
+      link: null
     }
   ];
 
@@ -318,10 +432,14 @@ const Experience = () => {
               <TimelineContent className="timeline-content">
                 <CompanyName>
                   <FaBriefcase />
-                  <CompanyLink href={exp.link} target="_blank" rel="noopener noreferrer">
-                    {exp.company}
-                    <FaExternalLinkAlt style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }} />
-                  </CompanyLink>
+                  {exp.link ? (
+                    <CompanyLink href={exp.link} target="_blank" rel="noopener noreferrer">
+                      {exp.company}
+                      <FaExternalLinkAlt style={{ fontSize: '0.8rem', marginLeft: '0.5rem' }} />
+                    </CompanyLink>
+                  ) : (
+                    <span>{exp.company}</span>
+                  )}
                 </CompanyName>
                 
                 <JobTitle>{exp.title}</JobTitle>
@@ -336,10 +454,21 @@ const Experience = () => {
                   {exp.location}
                 </JobLocation>
                 
-                {/* Removed JobDescription section since descriptions are empty */}
+                <ExpandButton onClick={() => toggleExpanded(index)}>
+                  {expandedItems[index] ? 'Show Less' : 'Show Details'}
+                </ExpandButton>
+                
+                <JobDescription expanded={expandedItems[index]}>
+                  <ul>
+                    {exp.description.map((item, descIndex) => (
+                      <li key={descIndex}>{item}</li>
+                    ))}
+                  </ul>
+                </JobDescription>
               </TimelineContent>
             </TimelineItem>
           ))}
+
         </TimelineContainer>
       </ExperienceContainer>
     </ExperienceSection>

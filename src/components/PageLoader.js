@@ -1,6 +1,156 @@
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
 
+const glitch = keyframes`
+  0% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(-2px, -2px);
+  }
+  60% {
+    transform: translate(2px, 2px);
+  }
+  80% {
+    transform: translate(2px, -2px);
+  }
+  100% {
+    transform: translate(0);
+  }
+`;
+
+const glitch1 = keyframes`
+  0% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(0);
+  }
+  10% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  20% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(2px, -2px);
+  }
+  30% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(-1px, 1px);
+  }
+  40% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(1px, -1px);
+  }
+  50% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(-3px, 3px);
+  }
+  60% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(3px, -3px);
+  }
+  70% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(-2px, 2px);
+  }
+  80% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(2px, -2px);
+  }
+  90% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(-1px, 1px);
+  }
+  100% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(0);
+  }
+`;
+
+const glitch2 = keyframes`
+  0% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(0);
+  }
+  10% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(2px, -2px);
+  }
+  20% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(-2px, 2px);
+  }
+  30% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(1px, -1px);
+  }
+  40% {
+    clip-path: inset(92% 0 1% 0);
+    transform: translate(-1px, 1px);
+  }
+  50% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(3px, -3px);
+  }
+  60% {
+    clip-path: inset(25% 0 58% 0);
+    transform: translate(-3px, 3px);
+  }
+  70% {
+    clip-path: inset(54% 0 7% 0);
+    transform: translate(2px, -2px);
+  }
+  80% {
+    clip-path: inset(58% 0 43% 0);
+    transform: translate(-2px, 2px);
+  }
+  90% {
+    clip-path: inset(40% 0 61% 0);
+    transform: translate(1px, -1px);
+  }
+  100% {
+    clip-path: inset(43% 0 1% 0);
+    transform: translate(0);
+  }
+`;
+
+const glitch3 = keyframes`
+  0% {
+    clip-path: inset(10% 0 85% 0);
+    transform: translate(1px, -1px);
+  }
+  15% {
+    clip-path: inset(75% 0 15% 0);
+    transform: translate(-1px, 1px);
+  }
+  30% {
+    clip-path: inset(20% 0 80% 0);
+    transform: translate(2px, -2px);
+  }
+  45% {
+    clip-path: inset(60% 0 30% 0);
+    transform: translate(-2px, 2px);
+  }
+  60% {
+    clip-path: inset(30% 0 70% 0);
+    transform: translate(1px, -1px);
+  }
+  75% {
+    clip-path: inset(80% 0 10% 0);
+    transform: translate(-1px, 1px);
+  }
+  90% {
+    clip-path: inset(15% 0 75% 0);
+    transform: translate(2px, -2px);
+  }
+  100% {
+    clip-path: inset(70% 0 20% 0);
+    transform: translate(-2px, 2px);
+  }
+`;
+
 const fadeIn = keyframes`
   from {
     opacity: 0;
@@ -46,82 +196,61 @@ const LoaderContainer = styled.div`
   animation: ${props => props.isExiting ? slideUp : 'none'} 0.8s ease-in-out forwards;
 `;
 
-const LoaderContent = styled.div`
-  text-align: center;
-  animation: ${props => props.isExiting ? fadeOut : fadeIn} 0.8s ease-in-out;
+
+
+const LoaderImage = styled.img`
+  max-width: 30%;
+  max-height: 30%;
+  object-fit: contain;
+  opacity: 0.3;
+  animation: ${props => props.isExiting ? fadeOut : fadeIn} 3s ease-in-out forwards;
 `;
 
-const LoaderLogo = styled.div`
-  font-size: 3rem;
-  font-weight: 800;
-  color: #8B0000;
-  margin-bottom: 1rem;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 0;
-    height: 3px;
-    background: #8B0000;
-    animation: expandLine 1.5s ease-in-out 0.5s forwards;
-  }
-
-  @keyframes expandLine {
-    to {
-      width: 100%;
-    }
-  }
+const GlitchOverlay = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/icon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: ${glitch1} 1.5s infinite linear alternate-reverse;
+  z-index: 1;
+  pointer-events: none;
 `;
 
-const LoaderText = styled.p`
-  color: #9e9e9e;
-  font-size: 1rem;
-  margin: 0;
-  opacity: 0;
-  animation: fadeInText 0.8s ease-in-out 1s forwards;
-  
-  @keyframes fadeInText {
-    to {
-      opacity: 1;
-    }
-  }
+const GlitchOverlay2 = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/icon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: ${glitch2} 2s infinite linear alternate-reverse;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: difference;
 `;
 
-const ProgressBar = styled.div`
-  width: 200px;
-  height: 2px;
-  background: rgba(139, 0, 0, 0.2);
-  border-radius: 1px;
-  margin: 2rem auto 0;
-  overflow: hidden;
-  position: relative;
-  
-  &::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0;
-    background: #8B0000;
-    animation: progress 2s ease-in-out forwards;
-  }
-  
-  @keyframes progress {
-    0% {
-      width: 0;
-    }
-    50% {
-      width: 60%;
-    }
-    100% {
-      width: 100%;
-    }
-  }
+const GlitchOverlay3 = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/images/icon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  animation: ${glitch3} 1.8s infinite linear alternate-reverse;
+  z-index: 3;
+  pointer-events: none;
+  mix-blend-mode: overlay;
 `;
 
 const PageLoader = ({ onLoadingComplete }) => {
@@ -140,11 +269,16 @@ const PageLoader = ({ onLoadingComplete }) => {
 
   return (
     <LoaderContainer isExiting={isExiting}>
-      <LoaderContent isExiting={isExiting}>
-        <LoaderLogo>Portfolio</LoaderLogo>
-        <LoaderText>Loading amazing things...</LoaderText>
-        <ProgressBar />
-      </LoaderContent>
+      <div style={{ position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <LoaderImage 
+          src="/images/icon.png" 
+          alt="Portfolio Logo"
+          isExiting={isExiting}
+        />
+        <GlitchOverlay />
+        <GlitchOverlay2 />
+        <GlitchOverlay3 />
+      </div>
     </LoaderContainer>
   );
 };

@@ -92,7 +92,6 @@ const HeroContent = styled.div`
 
 const Greeting = styled.p`
   font-size: 2rem;
-  color: #8B0000;
   margin-bottom: 1rem;
   font-weight: 600;
   opacity: 0;
@@ -110,7 +109,6 @@ const Greeting = styled.p`
 
   &::after {
     content: '|';
-    color: #8B0000;
     animation: blink 1s infinite;
     margin-left: 2px;
   }
@@ -308,7 +306,12 @@ const Hero = () => {
         <HeroContent 
           className={isVisible ? 'animate' : ''}
         >
-          <Greeting className={isVisible ? 'animate' : ''}>{greeting}</Greeting>
+          <Greeting 
+            className={isVisible ? 'animate' : ''}
+            style={{ color: getTextColor() }}
+          >
+            {greeting}
+          </Greeting>
           <Name 
             className={isVisible ? 'animate' : ''}
             style={{ color: hasShownName ? '#ffffff' : getTextColor() }}
@@ -324,8 +327,11 @@ const Hero = () => {
           <Description className={isVisible ? 'animate' : ''}>
             Entry-level penetration tester with a strong foundation in vulnerability assessment and blue team defense, now specializing in offensive security. Hands-on experience in Kubernetes exploitation, reverse engineering, and full-stack pentesting through self-hosted labs, Kubernetes Goat, and pwn.college program security challenges.
           </Description>
-          <CTAButton className={isVisible ? 'animate' : ''}>
-            Get Started <FaArrowRight />
+          <CTAButton 
+            className={isVisible ? 'animate' : ''}
+            onClick={() => document.getElementById('contact').scrollIntoView({ behavior: 'smooth' })}
+          >
+            Appointment <FaArrowRight />
           </CTAButton>
         </HeroContent>
         

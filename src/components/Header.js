@@ -50,7 +50,7 @@ const NavLink = styled.a`
   }
 `;
 
-const AppointmentButton = styled.button`
+const AppointmentButton = styled.a`
   background: transparent;
   border: 2px solid #8B0000;
   color: #8B0000;
@@ -59,6 +59,9 @@ const AppointmentButton = styled.button`
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
 
   &:hover {
     background: rgba(139, 0, 0, 0.1);
@@ -124,6 +127,10 @@ const Header = () => {
     setIsMobileMenuOpen(false);
   };
 
+  const handleAppointmentClick = () => {
+    scrollToSection('contact');
+  };
+
   return (
     <>
       <HeaderContainer>
@@ -131,7 +138,7 @@ const Header = () => {
           <Logo>Portfolio</Logo>
           
           <NavLinks>
-            <AppointmentButton>Appointment</AppointmentButton>
+            <AppointmentButton onClick={handleAppointmentClick}>Appointment</AppointmentButton>
           </NavLinks>
 
           <MobileMenuButton onClick={toggleMobileMenu}>
@@ -141,7 +148,10 @@ const Header = () => {
       </HeaderContainer>
 
       <MobileMenu isOpen={isMobileMenuOpen}>
-        <AppointmentButton style={{ marginTop: '1rem', width: '100%' }}>
+        <AppointmentButton 
+          onClick={handleAppointmentClick}
+          style={{ marginTop: '1rem', width: '100%' }}
+        >
           Appointment
         </AppointmentButton>
       </MobileMenu>

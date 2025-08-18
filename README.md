@@ -153,3 +153,7 @@ If you have any questions or need help customizing the portfolio, please open an
 ---
 
 **Note**: This portfolio template is designed to be fully customizable. Feel free to modify colors, layouts, and content to match your personal brand and style.
+
+color palette is:
+Dark Grey: #121212
+Blackish Red: #8B0000

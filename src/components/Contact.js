@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin } from 'react-icons/fa';
+import emailjs from '@emailjs/browser';
 
 const ContactSection = styled.section`
   padding: 100px 0;
@@ -15,14 +16,16 @@ const ContactContainer = styled.div`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: clamp(2rem, 5vw, 3rem);
+  font-size: clamp(3rem, 6vw, 4rem);
   font-weight: 800;
-  color: #ffffff;
+  color: #8B0000;
   text-align: center;
   margin-bottom: 1rem;
   opacity: 0;
   transform: translateY(30px);
   transition: all 1.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 2px;
 
   &.animate {
     opacity: 1;
@@ -57,6 +60,7 @@ const ContactContent = styled.div`
 `;
 
 const ContactInfo = styled.div`
+  padding: 3rem 2.5rem;
   opacity: 0;
   transform: translateX(-50px);
   transition: all 1.2s ease 0.4s;
@@ -72,10 +76,7 @@ const ContactItem = styled.div`
   align-items: center;
   gap: 1rem;
   margin-bottom: 2rem;
-  padding: 1rem;
-  background: rgba(139, 0, 0, 0.05);
-  border-radius: 10px;
-  border: 1px solid rgba(139, 0, 0, 0.2);
+  padding: 0;
 `;
 
 const ContactIcon = styled.div`
@@ -94,6 +95,57 @@ const ContactText = styled.div`
     color: #9e9e9e;
     margin: 0;
   }
+`;
+
+const ContactMessage = styled.div`
+  margin-bottom: 3rem;
+  text-align: left;
+`;
+
+const MessageTitle = styled.h3`
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  line-height: 1.2;
+`;
+
+const MessageText = styled.p`
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+  font-weight: 400;
+`;
+
+const SecurityStats = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+`;
+
+const StatItem = styled.div`
+  text-align: center;
+  padding: 1rem;
+`;
+
+const StatNumber = styled.div`
+  font-size: 2rem;
+  font-weight: 800;
+  color: #8B0000;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+`;
+
+const StatLabel = styled.div`
+  font-size: 0.9rem;
+  color: #9e9e9e;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 `;
 
 const SocialLinks = styled.div`
@@ -118,6 +170,7 @@ const SocialLink = styled.a`
 `;
 
 const ContactForm = styled.div`
+  padding: 3rem 2.5rem;
   opacity: 0;
   transform: translateX(50px);
   transition: all 1.2s ease 0.6s;
@@ -132,54 +185,62 @@ const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  margin-bottom: 1.5rem;
 `;
 
 const FormLabel = styled.label`
   color: #ffffff;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1rem;
 `;
 
 const FormInput = styled.input`
-  padding: 1rem;
-  background: rgba(139, 0, 0, 0.05);
-  border: 1px solid rgba(139, 0, 0, 0.2);
-  border-radius: 5px;
+  padding: 1rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(139, 0, 0, 0.3);
   color: #ffffff;
   font-size: 1rem;
   transition: all 0.3s ease;
+  font-weight: 400;
 
   &:focus {
     outline: none;
-    border-color: #8B0000;
-    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+    border-bottom-color: #8B0000;
+    border-bottom-width: 2px;
   }
 
   &::placeholder {
     color: #9e9e9e;
+    font-weight: 400;
   }
 `;
 
 const FormTextarea = styled.textarea`
-  padding: 1rem;
-  background: rgba(139, 0, 0, 0.05);
-  border: 1px solid rgba(139, 0, 0, 0.2);
-  border-radius: 5px;
+  padding: 1rem 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid rgba(139, 0, 0, 0.3);
   color: #ffffff;
   font-size: 1rem;
   min-height: 120px;
   resize: vertical;
   transition: all 0.3s ease;
   font-family: inherit;
+  font-weight: 400;
 
   &:focus {
     outline: none;
-    border-color: #8B0000;
-    box-shadow: 0 0 0 2px rgba(139, 0, 0, 0.1);
+    border-bottom-color: #8B0000;
+    border-bottom-width: 2px;
   }
 
   &::placeholder {
     color: #9e9e9e;
+    font-weight: 400;
   }
 `;
 
@@ -188,17 +249,22 @@ const SubmitButton = styled.button`
   color: #ffffff;
   border: none;
   padding: 1rem 2rem;
-  font-size: 1.1rem;
+  font-size: 1rem;
   font-weight: 600;
-  border-radius: 5px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.3s ease;
   align-self: flex-start;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 1.5rem;
+  box-shadow: 0 4px 15px rgba(139, 0, 0, 0.3);
 
   &:hover {
-    background: #660000;
+    background: #ffffff;
+    color: #8B0000;
     transform: translateY(-2px);
-    box-shadow: 0 10px 30px rgba(139, 0, 0, 0.3);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
   }
 
   &:active {
@@ -212,6 +278,53 @@ const SubmitButton = styled.button`
   }
 `;
 
+const SuccessMessage = styled.div`
+  background: rgba(0, 128, 0, 0.1);
+  color: #00ff00;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  text-align: center;
+  border: 1px solid rgba(0, 128, 0, 0.3);
+`;
+
+const ErrorMessage = styled.div`
+  background: rgba(255, 0, 0, 0.1);
+  color: #ff6b6b;
+  padding: 1rem;
+  border-radius: 5px;
+  margin-top: 1rem;
+  text-align: center;
+  border: 1px solid rgba(255, 0, 0, 0.3);
+`;
+
+const MessageContent = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+`;
+
+const StatusMessageText = styled.span`
+  flex: 1;
+`;
+
+const CloseButton = styled.button`
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.7;
+  transition: opacity 0.3s ease;
+
+  &:hover {
+    opacity: 1;
+  }
+`;
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -220,6 +333,8 @@ const Contact = () => {
     message: ''
   });
   const [isVisible, setIsVisible] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
   const contactRef = useRef(null);
 
   useEffect(() => {
@@ -250,10 +365,37 @@ const Contact = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const resetForm = () => {
+    setFormData({ name: '', email: '', subject: '', message: '' });
+    setSubmitStatus(null);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus(null);
+
+    try {
+      // You'll need to replace these with your actual EmailJS credentials
+      const result = await emailjs.sendForm(
+        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
+        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        e.target,
+        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+      );
+
+      if (result.status === 200) {
+        setSubmitStatus('success');
+        setFormData({ name: '', email: '', subject: '', message: '' });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Email send failed:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -275,39 +417,20 @@ const Contact = () => {
           <ContactInfo 
             className={isVisible ? 'animate' : ''}
           >
-            <ContactItem>
-              <ContactIcon><FaEnvelope /></ContactIcon>
-              <ContactText>
-                <h4>Email</h4>
-                <p>akhileshyadav333@gmail.com</p>
-              </ContactText>
-            </ContactItem>
-            
-            <ContactItem>
-              <ContactIcon><FaPhone /></ContactIcon>
-              <ContactText>
-                <h4>Phone</h4>
-                <p>+91 7236970898</p>
-              </ContactText>
-            </ContactItem>
-            
-            <ContactItem>
-              <ContactIcon><FaMapMarkerAlt /></ContactIcon>
-              <ContactText>
-                <h4>Location</h4>
-                <p>Bangalore, India</p>
-              </ContactText>
-            </ContactItem>
+            <ContactMessage>
+              <MessageTitle>Ready to Secure Your Digital Assets?</MessageTitle>
+              <MessageText>
+                Let's collaborate to identify vulnerabilities, strengthen your defenses, and build a robust security posture. Whether you need penetration testing, security assessments, or consultation, I'm here to help protect what matters most.
+              </MessageText>
+
+            </ContactMessage>
             
             <SocialLinks>
-              <SocialLink href="https://github.com/akhilesh-yadav-333" target="_blank" rel="noopener noreferrer">
-                <FaGithub />
+              <SocialLink href="mailto:akhileshyadav333@gmail.com" title="Send me an email">
+                <FaEnvelope />
               </SocialLink>
-              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
+              <SocialLink href="https://www.linkedin.com/in/akhilesh--yadav" target="_blank" rel="noopener noreferrer" title="Connect on LinkedIn">
                 <FaLinkedin />
-              </SocialLink>
-              <SocialLink href="#" target="_blank" rel="noopener noreferrer">
-                <FaTwitter />
               </SocialLink>
             </SocialLinks>
           </ContactInfo>
@@ -317,11 +440,11 @@ const Contact = () => {
           >
             <form onSubmit={handleSubmit}>
               <FormGroup>
-                <FormLabel htmlFor="name">Name</FormLabel>
                 <FormInput
                   type="text"
                   id="name"
                   name="name"
+                  placeholder="Name"
                   value={formData.name}
                   onChange={handleInputChange}
                   required
@@ -329,11 +452,11 @@ const Contact = () => {
               </FormGroup>
               
               <FormGroup>
-                <FormLabel htmlFor="email">Email</FormLabel>
                 <FormInput
                   type="email"
                   id="email"
                   name="email"
+                  placeholder="Email"
                   value={formData.email}
                   onChange={handleInputChange}
                   required
@@ -341,11 +464,11 @@ const Contact = () => {
               </FormGroup>
               
               <FormGroup>
-                <FormLabel htmlFor="subject">Subject</FormLabel>
                 <FormInput
                   type="text"
                   id="subject"
                   name="subject"
+                  placeholder="Subject"
                   value={formData.subject}
                   onChange={handleInputChange}
                   required
@@ -353,20 +476,38 @@ const Contact = () => {
               </FormGroup>
               
               <FormGroup>
-                <FormLabel htmlFor="message">Message</FormLabel>
                 <FormTextarea
                   id="message"
                   name="message"
+                  placeholder="Message"
                   value={formData.message}
                   onChange={handleInputChange}
-                  rows="5"
+                  rows="4"
                   required
                 />
               </FormGroup>
               
-              <SubmitButton type="submit">
-                Send Message
+              <SubmitButton type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'SENDING...' : 'PING ME'}
               </SubmitButton>
+              
+              {submitStatus === 'success' && (
+                <SuccessMessage>
+                  <MessageContent>
+                    <StatusMessageText>Message sent successfully! I'll get back to you soon.</StatusMessageText>
+                    <CloseButton onClick={resetForm}>×</CloseButton>
+                  </MessageContent>
+                </SuccessMessage>
+              )}
+              
+              {submitStatus === 'error' && (
+                <ErrorMessage>
+                  <MessageContent>
+                    <StatusMessageText>Failed to send message. Please try again or contact me directly.</StatusMessageText>
+                    <CloseButton onClick={resetForm}>×</CloseButton>
+                  </MessageContent>
+                </ErrorMessage>
+              )}
             </form>
           </ContactForm>
         </ContactContent>
