@@ -378,10 +378,10 @@ const Contact = () => {
     try {
       // You'll need to replace these with your actual EmailJS credentials
       const result = await emailjs.sendForm(
-        'YOUR_SERVICE_ID', // Replace with your EmailJS service ID
-        'YOUR_TEMPLATE_ID', // Replace with your EmailJS template ID
+        'service_2ssspdz', // Replace with your EmailJS service ID
+        'template_5i34y1c', // Replace with your EmailJS template ID
         e.target,
-        'YOUR_PUBLIC_KEY' // Replace with your EmailJS public key
+        'ov89u1BMqZLybybrl' // Replace with your EmailJS public key
       );
 
       if (result.status === 200) {

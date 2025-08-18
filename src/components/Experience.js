@@ -338,7 +338,7 @@ const Experience = () => {
     {
       company: "Future Netwings Solutions Pvt. Ltd",
       title: "SOC Trainee",
-      duration: "Dec 2022 - May 2024",
+      duration: "Dec 2023 - May 2024",
       location: "Bangalore, India",
       description: [
         "Monitored security events and alerts using SIEM tools and security monitoring platforms",
