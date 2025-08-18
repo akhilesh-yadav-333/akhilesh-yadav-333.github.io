@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaTelegram, FaTimes } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
 
 const ContactSection = styled.section`
@@ -279,13 +279,13 @@ const SubmitButton = styled.button`
 `;
 
 const SuccessMessage = styled.div`
-  background: rgba(0, 128, 0, 0.1);
-  color: #00ff00;
+  background: rgba(139, 0, 0, 0.1);
+  color: #8B0000;
   padding: 1rem;
   border-radius: 5px;
   margin-top: 1rem;
   text-align: center;
-  border: 1px solid rgba(0, 128, 0, 0.3);
+  border: 1px solid rgba(139, 0, 0, 0.3);
 `;
 
 const ErrorMessage = styled.div`
@@ -325,6 +325,247 @@ const CloseButton = styled.button`
   }
 `;
 
+// Terminal Popup Components
+const TerminalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const TerminalWindow = styled.div`
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(139, 0, 0, 0.3), 0 0 30px rgba(139, 0, 0, 0.2);
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+
+  &.visible {
+    transform: scale(1);
+  }
+
+  @media (max-width: 768px) {
+    width: 95%;
+    max-height: 70vh;
+  }
+`;
+
+const TerminalHeader = styled.div`
+  background: #8B0000;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #660000;
+`;
+
+const TerminalTitle = styled.span`
+  color: #ffffff;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+`;
+
+const TerminalCloseBtn = styled.button`
+  background: none;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+`;
+
+const TerminalBody = styled.div`
+  padding: 20px;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #8B0000;
+  background: #000000;
+  min-height: 300px;
+  max-height: 60vh;
+  overflow-y: auto;
+`;
+
+const TerminalLine = styled.div`
+  margin-bottom: 8px;
+  opacity: 0;
+  transform: translateY(10px);
+  animation: typeIn 0.3s ease forwards;
+
+  @keyframes typeIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+`;
+
+const TerminalPrompt = styled.span`
+  color: #8B0000;
+  margin-right: 8px;
+`;
+
+const TerminalOutput = styled.span`
+  color: #8B0000;
+`;
+
+const TerminalError = styled.span`
+  color: #ff4444;
+`;
+
+const TerminalCursor = styled.span`
+  color: #8B0000;
+  animation: blink 1s infinite;
+  
+  @keyframes blink {
+    0%, 50% { opacity: 1; }
+    51%, 100% { opacity: 0; }
+  }
+`;
+
+// Success Message with Flying Telegram Icon
+const SuccessModal = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(18, 18, 18, 0.95);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+
+  &.visible {
+    opacity: 1;
+    visibility: visible;
+  }
+`;
+
+const SuccessCard = styled.div`
+  background: #1a1a1a;
+  border: 2px solid #8B0000;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  max-width: 500px;
+  width: 90%;
+  position: relative;
+  transform: scale(0.8);
+  transition: all 0.3s ease;
+  box-shadow: 0 20px 40px rgba(139, 0, 0, 0.3);
+
+  &.visible {
+    transform: scale(1);
+  }
+
+  @media (max-width: 768px) {
+    padding: 30px 20px;
+    width: 95%;
+  }
+`;
+
+const FlyingTelegramIcon = styled.div`
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 60px;
+  color: #8B0000;
+  animation: flyAround 3s ease-in-out infinite;
+
+  @keyframes flyAround {
+    0%, 100% {
+      transform: translateX(-50%) translateY(0) rotate(0deg);
+    }
+    25% {
+      transform: translateX(-50%) translateY(-20px) rotate(10deg);
+    }
+    50% {
+      transform: translateX(-50%) translateY(-10px) rotate(-5deg);
+    }
+    75% {
+      transform: translateX(-50%) translateY(-15px) rotate(8deg);
+    }
+  }
+
+  @media (max-width: 768px) {
+    font-size: 50px;
+    top: -25px;
+  }
+`;
+
+const SuccessTitle = styled.h3`
+  color: #8B0000;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+`;
+
+const SuccessModalMessage = styled.p`
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 30px;
+`;
+
+const OkButton = styled.button`
+  background: #8B0000;
+  color: #ffffff;
+  border: none;
+  padding: 12px 30px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &:hover {
+    background: #ffffff;
+    color: #8B0000;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(139, 0, 0, 0.4);
+  }
+`;
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -334,7 +575,10 @@ const Contact = () => {
   });
   const [isVisible, setIsVisible] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+  const [submitStatus, setSubmitStatus] = useState(null);
+  const [showTerminal, setShowTerminal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [terminalLines, setTerminalLines] = useState([]);
   const contactRef = useRef(null);
 
   useEffect(() => {
@@ -370,32 +614,94 @@ const Contact = () => {
     setSubmitStatus(null);
   };
 
+  const simulatePing = async (isSuccess = true) => {
+    setShowTerminal(true);
+    setTerminalLines([]);
+    
+    if (isSuccess) {
+      const pingLines = [
+        { text: 'ping Akhilesh', type: 'command' },
+        { text: 'PING Akhilesh (0.0.0.0): 56 data bytes', type: 'output' },
+        { text: '333 bytes from 0.0.0.0: icmp_seq=0 ttl=3 time=41.126 ms', type: 'output' },
+        { text: '333 bytes from 0.0.0.0: icmp_seq=1 ttl=3 time=78.463 ms', type: 'output' },
+        { text: '333 bytes from 0.0.0.0: icmp_seq=2 ttl=3 time=94.156 ms', type: 'output' },
+        { text: '', type: 'spacer' },
+        { text: '--- Akhilesh ping statistics ---', type: 'output' },
+        { text: '3 packets transmitted, 3 packets received, 0.0% packet loss', type: 'output' },
+        { text: 'round-trip min/avg/max/stddev = 37.239/58.660/94.156/19.787 ms', type: 'output' }
+      ];
+      const perLineDelayMs = 250;
+      for (let i = 0; i < pingLines.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, perLineDelayMs));
+        setTerminalLines(prev => [...prev, pingLines[i]]);
+      }
+      const remainingMs = Math.max(0, 3000 - pingLines.length * perLineDelayMs);
+      setTimeout(() => {
+        setShowTerminal(false);
+        setShowSuccessModal(true);
+      }, remainingMs);
+    } else {
+      const errorLines = [
+        { text: 'ping Akhilesh', type: 'command' },
+        { text: 'PING Akhilesh (0.0.0.0): 56 data bytes', type: 'output' },
+        { text: 'Request timeout for icmp_seq 0', type: 'error' },
+        { text: 'Request timeout for icmp_seq 1', type: 'error' },
+        { text: 'Request timeout for icmp_seq 2', type: 'error' },
+        { text: '', type: 'spacer' },
+        { text: '--- Akhilesh ping statistics ---', type: 'output' },
+        { text: '3 packets transmitted, 0 packets received, 100.0% packet loss', type: 'error' }
+      ];
+      const perLineDelayMs = 250;
+      for (let i = 0; i < errorLines.length; i++) {
+        await new Promise(resolve => setTimeout(resolve, perLineDelayMs));
+        setTerminalLines(prev => [...prev, errorLines[i]]);
+      }
+      const remainingMs = Math.max(0, 3000 - errorLines.length * perLineDelayMs);
+      setTimeout(() => {
+        setShowTerminal(false);
+        setSubmitStatus('error');
+      }, remainingMs);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
 
     try {
-      // You'll need to replace these with your actual EmailJS credentials
+      // Simulate the ping terminal first
+      await simulatePing(true);
+      
+      // Then actually send the email
       const result = await emailjs.sendForm(
-        'service_2ssspdz', // Replace with your EmailJS service ID
-        'template_5i34y1c', // Replace with your EmailJS template ID
+        'service_2ssspdz',
+        'template_5i34y1c',
         e.target,
-        'ov89u1BMqZLybybrl' // Replace with your EmailJS public key
+        'ov89u1BMqZLybybrl'
       );
 
       if (result.status === 200) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
       } else {
-        setSubmitStatus('error');
+        await simulatePing(false);
       }
     } catch (error) {
       console.error('Email send failed:', error);
-      setSubmitStatus('error');
+      await simulatePing(false);
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const closeTerminal = () => {
+    setShowTerminal(false);
+  };
+
+  const closeSuccessModal = () => {
+    setShowSuccessModal(false);
+    resetForm();
   };
 
   return (
@@ -512,6 +818,59 @@ const Contact = () => {
           </ContactForm>
         </ContactContent>
       </ContactContainer>
+
+      {/* Terminal Popup */}
+      <TerminalOverlay className={showTerminal ? 'visible' : ''}>
+        <TerminalWindow className={showTerminal ? 'visible' : ''}>
+          <TerminalHeader>
+            <TerminalTitle>Terminal - Pinging Akhilesh</TerminalTitle>
+            <TerminalCloseBtn onClick={closeTerminal}>
+              <FaTimes />
+            </TerminalCloseBtn>
+          </TerminalHeader>
+          <TerminalBody>
+            {terminalLines.map((line, index) => (
+              <TerminalLine key={index} style={{ animationDelay: `${index * 0.1}s` }}>
+                {line.type === 'command' && (
+                  <>
+                    <TerminalPrompt>$</TerminalPrompt>
+                    <TerminalOutput>{line.text}</TerminalOutput>
+                  </>
+                )}
+                {line.type === 'output' && (
+                  <TerminalOutput>{line.text}</TerminalOutput>
+                )}
+                {line.type === 'error' && (
+                  <TerminalError>{line.text}</TerminalError>
+                )}
+                {line.type === 'spacer' && <br />}
+              </TerminalLine>
+            ))}
+            {terminalLines.length > 0 && (
+              <TerminalLine>
+                <TerminalPrompt>$</TerminalPrompt>
+                <TerminalCursor>_</TerminalCursor>
+              </TerminalLine>
+            )}
+          </TerminalBody>
+        </TerminalWindow>
+      </TerminalOverlay>
+
+      {/* Success Modal with Flying Telegram */}
+      <SuccessModal className={showSuccessModal ? 'visible' : ''}>
+        <SuccessCard className={showSuccessModal ? 'visible' : ''}>
+          <FlyingTelegramIcon>
+            <FaTelegram />
+          </FlyingTelegramIcon>
+          <SuccessTitle>Message Sent!</SuccessTitle>
+          <SuccessModalMessage>
+            Message sent successfully! I'll get back to you soon.
+          </SuccessModalMessage>
+          <OkButton onClick={closeSuccessModal}>
+            OK
+          </OkButton>
+        </SuccessCard>
+      </SuccessModal>
     </ContactSection>
   );
 };
