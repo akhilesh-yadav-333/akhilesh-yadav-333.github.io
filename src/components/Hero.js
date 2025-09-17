@@ -238,7 +238,7 @@ const Hero = () => {
 
   const fullGreeting = "Hello I'm";
   const fullName = "Akhilesh Yadav";
-  const fullTitle = "Security Engineer & Penetration Tester";
+  const fullTitle = "Penetration Tester";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
