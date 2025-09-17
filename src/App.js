@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
-import Experience from './components/Experience';
 import Services from './components/Services';
 import Portfolio from './components/Portfolio';
 import Awards from './components/Awards';
@@ -39,7 +38,6 @@ function App() {
       <MainContent>
         <Hero />
         <About />
-        <Experience />
         <Services />
         <Portfolio />
         <Awards />
